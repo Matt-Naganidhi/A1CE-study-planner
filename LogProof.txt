@@ -1,0 +1,346 @@
+Microsoft Windows [Version 10.0.22631.4317]
+(c) Microsoft Corporation. All rights reserved.
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git add .
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   members.txt
+
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git commit -m "Lab 6 step 4 team B"
+[main 6f1615f] Lab 6 step 4 team B
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 TeamBfiles/members.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>echo "Team member names: Gold: golCMKL Matt: Matt-Naganidhi" > members.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git add .
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git commit -m "update names"
+[main 214bc51] update names
+ 1 file changed, 1 insertion(+)
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git push
+Enumerating objects: 9, done.
+Counting objects: 100% (9/9), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (8/8), 753 bytes | 753.00 KiB/s, done.
+Total 8 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), done.
+To https://github.com/Matt-Naganidhi/A1CE-study-planner
+   bb52f9b..214bc51  main -> main
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>echo "Team member names: Gold: My favourite food is Whatever Matt: My favourite food is information " > favouriteFood.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git push
+Everything up-to-date
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        favouriteFood.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git add favouriteFood.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git commit -m "added favouriteFood after finding out pushing on it's own do
+es nothing"
+[main 304ad02] added favouriteFood after finding out pushing on it's own does nothing
+ 1 file changed, 1 insertion(+)
+ create mode 100644 TeamBfiles/favouriteFood.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git push
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 481 bytes | 481.00 KiB/s, done.
+Total 4 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/Matt-Naganidhi/A1CE-study-planner
+   214bc51..304ad02  main -> main
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git log
+commit 304ad029f533fbf5c0b95256b4d0f99ecc236243 (HEAD -> main, origin/main, origin/HEAD)
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:58:15 2024 +0700
+
+    added favouriteFood after finding out pushing on it's own does nothing
+
+commit 214bc51ab1f9af5f425de6a087287d8d9a8ff813
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:52:43 2024 +0700
+
+    update names
+
+commit 6f1615f00feca78bf577579b526b0fde096ba694
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:50:54 2024 +0700
+
+    Lab 6 step 4 team B
+
+commit bb52f9bdd7e76d182d357bf96f356ce6699627ab
+Author: Supakorn Etitum <setitum@cmkl.ac.th>
+Date:   Fri Oct 11 15:27:23 2024 +0700
+
+    Team A Member name and github username
+
+commit c4632e383df78a96885d22339b8513a2045f1eab
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 4 14:01:16 2024 +0700
+
+    Add files via upload
+:...skipping...
+commit 304ad029f533fbf5c0b95256b4d0f99ecc236243 (HEAD -> main, origin/main, origin/HEAD)
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:58:15 2024 +0700
+
+    added favouriteFood after finding out pushing on it's own does nothing
+
+commit 214bc51ab1f9af5f425de6a087287d8d9a8ff813
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:52:43 2024 +0700
+
+    update names
+
+commit 6f1615f00feca78bf577579b526b0fde096ba694
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:50:54 2024 +0700
+
+    Lab 6 step 4 team B
+
+commit bb52f9bdd7e76d182d357bf96f356ce6699627ab
+Author: Supakorn Etitum <setitum@cmkl.ac.th>
+Date:   Fri Oct 11 15:27:23 2024 +0700
+
+    Team A Member name and github username
+
+commit c4632e383df78a96885d22339b8513a2045f1eab
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 4 14:01:16 2024 +0700
+
+    Add files via upload
+
+commit cde192030ba82f046ad3c37a006a5adee9e1561a
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Thu Sep 19 11:47:24 2024 +0700
+
+    Initial commit
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git restore
+fatal: you must specify path(s) to restore
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>echo "Team member names: Gold: My favourite food is Whatever Matt: My favourite food is information  ...additional information added to be removed to test git restore " > favouriteFood.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git add favouriteFood.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git commit -m "remove this with restore"
+[main 29a479e] remove this with restore
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git push
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 487 bytes | 487.00 KiB/s, done.
+Total 4 (delta 1), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/Matt-Naganidhi/A1CE-study-planner
+   304ad02..29a479e  main -> main
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git restore
+fatal: you must specify path(s) to restore
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git restore favouriteFood.txt
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git log
+commit 29a479e62136bd80669c3a6f6e17664b297599da (HEAD -> main, origin/main, origin/HEAD)
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 16:03:17 2024 +0700
+
+    remove this with restore
+
+commit 304ad029f533fbf5c0b95256b4d0f99ecc236243
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:58:15 2024 +0700
+
+    added favouriteFood after finding out pushing on it's own does nothing
+
+commit 214bc51ab1f9af5f425de6a087287d8d9a8ff813
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:52:43 2024 +0700
+
+    update names
+
+commit 6f1615f00feca78bf577579b526b0fde096ba694
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 11 15:50:54 2024 +0700
+
+    Lab 6 step 4 team B
+
+commit bb52f9bdd7e76d182d357bf96f356ce6699627ab
+Author: Supakorn Etitum <setitum@cmkl.ac.th>
+Date:   Fri Oct 11 15:27:23 2024 +0700
+
+    Team A Member name and github username
+
+commit c4632e383df78a96885d22339b8513a2045f1eab
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 4 14:01:16 2024 +0700
+
+    Add files via upload
+
+commit cde192030ba82f046ad3c37a006a5adee9e1561a
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Thu Sep 19 11:47:24 2024 +0700
+
+    Initial commit
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git restore c4632e383df78a96885d22339b8513a2045f1eab
+error: pathspec 'c4632e383df78a96885d22339b8513a2045f1eab' did not match any file(s) known to git
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git restore .
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git checkout c4632e383df78a96885d22339b8513a2045f1eab
+Note: switching to 'c4632e383df78a96885d22339b8513a2045f1eab'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at c4632e3 Add files via upload
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git reset c4632e383df78a96885d22339b8513a2045f1eab
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git checkout main
+Previous HEAD position was c4632e3 Add files via upload
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git reset --hard c4632e383df78a96885d22339b8513a2045f1eab
+HEAD is now at c4632e3 Add files via upload
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git log
+commit c4632e383df78a96885d22339b8513a2045f1eab (HEAD -> main)
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Fri Oct 4 14:01:16 2024 +0700
+
+    Add files via upload
+
+commit cde192030ba82f046ad3c37a006a5adee9e1561a
+Author: Matt Naganidhi <66015573+Matt-Naganidhi@users.noreply.github.com>
+Date:   Thu Sep 19 11:47:24 2024 +0700
+
+    Initial commit
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git reflog
+c4632e3 (HEAD -> main) HEAD@{0}: reset: moving to c4632e383df78a96885d22339b8513a2045f1eab
+29a479e (origin/main, origin/HEAD) HEAD@{1}: checkout: moving from c4632e383df78a96885d22339b8513a2045f1eab to main
+c4632e3 (HEAD -> main) HEAD@{2}: checkout: moving from main to c4632e383df78a96885d22339b8513a2045f1eab
+29a479e (origin/main, origin/HEAD) HEAD@{3}: commit: remove this with restore
+304ad02 HEAD@{4}: commit: added favouriteFood after finding out pushing on it's own does nothing
+214bc51 HEAD@{5}: commit: update names
+6f1615f HEAD@{6}: commit: Lab 6 step 4 team B
+bb52f9b HEAD@{7}: clone: from https://github.com/Matt-Naganidhi/A1CE-study-planner
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>git checkout d4e3f45  # Use the commit hash before the reset
+error: pathspec 'd4e3f45' did not match any file(s) known to git
+error: pathspec '#' did not match any file(s) known to git
+error: pathspec 'Use' did not match any file(s) known to git
+error: pathspec 'the' did not match any file(s) known to git
+error: pathspec 'commit' did not match any file(s) known to git
+error: pathspec 'hash' did not match any file(s) known to git
+error: pathspec 'before' did not match any file(s) known to git
+error: pathspec 'the' did not match any file(s) known to git
+error: pathspec 'reset' did not match any file(s) known to git
+
+B:\AICE\JIGler\A1CE-study-planner\TeamBfiles>cd ..
+
+B:\AICE\JIGler\A1CE-study-planner>cd ..
+
+B:\AICE\JIGler>git clone https://github.com/Matt-Naganidhi/A1CE-study-planner
+fatal: destination path 'A1CE-study-planner' already exists and is not an empty directory.
+
+B:\AICE\JIGler>rm -rf A1CE-study-planner
+'rm' is not recognized as an internal or external command,
+operable program or batch file.
+
+B:\AICE\JIGler>git clone https://github.com/yourusername/A1CE-study-planner.git
+fatal: destination path 'A1CE-study-planner' already exists and is not an empty directory.
+
+B:\AICE\JIGler>git clone https://github.com/yourusername/A1CE-study-planner.git
+Cloning into 'A1CE-study-planner'...
+remote: Repository not found.
+fatal: repository 'https://github.com/yourusername/A1CE-study-planner.git/' not found
+
+B:\AICE\JIGler>git clone https://github.com/yourusername/A1CE-study-planner.git
+Cloning into 'A1CE-study-planner'...
+remote: Repository not found.
+fatal: repository 'https://github.com/yourusername/A1CE-study-planner.git/' not found
+
+B:\AICE\JIGler>git clone https://github.com/Matt-Naganidhi/A1CE-study-planner
+Cloning into 'A1CE-study-planner'...
+remote: Enumerating objects: 38, done.
+remote: Counting objects: 100% (38/38), done.
+remote: Compressing objects: 100% (27/27), done.
+remote: Total 38 (delta 11), reused 26 (delta 4), pack-reused 0 (from 0)
+Receiving objects: 100% (38/38), 99.96 KiB | 1.19 MiB/s, done.
+Resolving deltas: 100% (11/11), done.
+
+B:\AICE\JIGler>
