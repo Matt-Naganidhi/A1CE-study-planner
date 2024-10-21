@@ -1,3 +1,5 @@
+#Author Supakorn Etitum (JackJack)
+
 import pandas as pd
 import csv
 
