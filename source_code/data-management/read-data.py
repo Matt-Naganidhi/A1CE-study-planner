@@ -1,6 +1,6 @@
 #This source code is used to read txt files and convert them into lists
 #Inputs: input file path, output file path
-#Outputs: None
+#Outputs: records roadmap information to output.csv
 #Author Supakorn Etitum (JackJack)
 #Modified by Matt Naganidhi for filepath generalization
 import pandas as pd
