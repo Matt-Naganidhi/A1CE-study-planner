@@ -1,0 +1,105 @@
+﻿The Jigler, 9/6/2024
+
+
+A1CE Study Planner
+
+
+1. Review the list of requirements in the project description document. Are any of them unclear? Are any of them infeasible? Try to rank them in terms of must have, nice to have, and blue sky.
+Must have:
+* Initialize roadmap from exported file
+* Assign target start and completion dates to assessments
+* Create task with competency, description, date/time, duration. Usually the tasks will involve working on assessment but they could also refer to lab assignments or other competency work.
+* View plan/schedule (tasks and assessment target dates)
+* Mark assessment/task as completed
+* View progress
+Nice to: 
+* Popup task notification (background widget) to let you know when a task is scheduled or a target date is close. You may wish to provide some options to configure the notification, for instance, to specify how many days in advance of a target date you want to be reminded.
+* Noice 👍UI design
+* Competency categories (explore competencies
+Blue sky:
+* View statistics
+* Competency recommendations system
+* Count down timer to deadline to increase pressure on students
+
+
+2. Discuss your requirements with your stakeholder (Dr. Sally) to see if she agrees with your revisions.
+3. Create a use case diagram for your program. Follow the standards as discussed in class.
+
+
+
+
+
+
+
+
+
+
+4. Create a use case narrative for ONE use case in your project.
+Add a task
+Main success scenario:
+1. User views the main planner
+2. User creates a new task
+3. System ask to select task type
+4. User choose task type
+5. System ask for task name
+6. User enter task name
+7. System ask for task description
+8. User enter task description
+9. System ask for competency of the task
+10. User chooses the competency of the task
+11. System ask for start/end date
+12. User inputs start/end date
+13. System ask if user want to add the task
+14. User confirm
+15. Task successfully added
+
+
+
+
+Extension (a):
+13a. System ask if user want to add the task
+14a. User cancel
+Extension (b):
+7. System discover that task name already exist
+8. System display error message and ask to re-enter
+9. Return to step 5 in main scenario
+Extension (c):
+1. User views the main planner
+2. User clicks on task to view assessed skills.
+Modify Task
+1. Main success scenario:
+2. User views existing tasks
+3. System ask to select a task
+4. User chooses a task
+5. System ask if the user wants to modify task name
+6. User modifies task name
+7. System ask if the user wants to modify task description
+8. User modifies task description
+9. System ask if user wants to modify task date
+10. User modifies task date
+Extension (a):
+5a. System ask if user wants to modify the name
+6a. User refuse to modify the name
+7a. System ask if the user wants to modify task description
+8a. User refuse to modify the task description
+9a. System ask if user wants to modify task date
+10a. User refuse to modify the task date.
+Extension (b):
+6b. User inputs invalid name
+8b. User inputs invalid task description
+10b. User inputs invalid date
+
+
+Create Road Map
+1. System asks if user wants to import existing roadmap or create new road map
+2. User picks import existing roadmap
+3. System asks for the file the user wants to import
+4. User selects the file in the device 
+5. System displays the summary of the roadmap to the user as a planner
+Extension (a):
+5a. File has invalid format 
+6a. Competencies in the files are invalid
+Extension (b):
+5b. File has invalid file type 
+Extension (c):
+5c. File does not exist
