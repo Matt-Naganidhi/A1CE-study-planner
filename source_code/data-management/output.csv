@@ -1,0 +1,47 @@
+ AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00010       , Understand text indexing and retrieval
+ AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00020       , Understand document representation and similarity measures
+ AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00030       , Understand ranking algorithms
+ AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00040       , Create machine learning-based retrieval system
+ AIC-604         , Computer Vision                                        , AIC-604:00010       , Understand and apply a range of fundamental digital image transformations used in computer vision
+ AIC-604         , Computer Vision                                        , AIC-604:00020       , Apply image segmentation algorithms and evaluate their performance
+ AIC-604         , Computer Vision                                        , AIC-604:00030       , Analyze image features used in matching and tracking algorithms
+ AIC-604         , Computer Vision                                        , AIC-604:00040       , Create object detection and tracking algorithm using pre-trained object detection models
+ HAS-108         , Behavioral Economics                                   , HAS-108:00010       , Understand Rational choice and individual demand
+ HAS-108         , Behavioral Economics                                   , HAS-108:00020       , Analyze Application of rational choice and consumer theory
+ HAS-108         , Behavioral Economics                                   , HAS-108:00030       , Understand Production and costs functions
+ HAS-108         , Behavioral Economics                                   , HAS-108:00040       , Analyze Competitive and non-competitive markets
+ HAS-108         , Behavioral Economics                                   , HAS-108:00050       , Understand Information and choice under uncertainty
+ HCD-501         , Accessibility & Universal Design                       , HCD-501:00010       , Explain what accessibility means and why it is important
+ HCD-501         , Accessibility & Universal Design                       , HCD-501:00020       , Apply accessibility principles and guidelines in real systems
+ HCD-501         , Accessibility & Universal Design                       , HCD-501:00030       , Demonstrate the Value Proposition of Universal Design
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00010       , Calculating basic operations for vectors and matrices
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00020       , Determining basic matrices of linear transformations
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00030       , Applying matrix decomposition to solve linear equations
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00040       , Calculating eigenvalues and eigenvectors
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00050       , Determining the rank and nullity of a matrix and linear transformation
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00060       , Solving linear equations
+ MAT-201         , Matrices and Linear Transformations (Linear algebra)   , MAT-201:00070       , Solving least square minimisation method
+ SEC-204         , Security Policy and Processes                          , SEC-204:00010       ," Successful students will be able to read, understand, and analyze information security policies"
+ SEC-204         , Security Policy and Processes                          , SEC-204:00020       , Successful students will be able to criticize existing information security policies or define their own information security policy
+ SEC-204         , Security Policy and Processes                          , SEC-204:00030       ," Successful students will be able to understand, analyze, and implement security processes in accordance with some security frameworks."
+ SEN-107         , Fundamental Data Structures and Algorithms             , SEN-107:00010       , Creating and using lists
+ SEN-107         , Fundamental Data Structures and Algorithms             , SEN-107:00020       , Understanding and using recursion
+ SEN-107         , Fundamental Data Structures and Algorithms             , SEN-107:00030       , Creating and using binary trees
+ SEN-107         , Fundamental Data Structures and Algorithms             , SEN-107:00040       , Creating and using trees with arbitrary branching factors
+ SEN-107         , Fundamental Data Structures and Algorithms             , SEN-107:00050       , Using content-addressable storage
+ SEN-107         , Fundamental Data Structures and Algorithms             , SEN-107:00060       , Creating and using graphs
+ SEN-201         , Software Engineering Processes                         , SEN-201:00010       , Create a problem definition for a software system
+ SEN-201         , Software Engineering Processes                         , SEN-201:00020       , Create a high level architecture design for a system
+ SEN-201         , Software Engineering Processes                         , SEN-201:00030       , Create a detailed design for a system component
+ SEN-201         , Software Engineering Processes                         , SEN-201:00040       , Use SCM tools to solve common team development problems
+ SEN-201         , Software Engineering Processes                         , SEN-201:00050       , Create and execute a set of unit tests for a software module
+ SEN-201         , Software Engineering Processes                         , SEN-201:00060       , Create and execute a functional test plan
+ SEN-201         , Software Engineering Processes                         , SEN-201:00070       , Create and implement a deployment plan
+ SEN-201         , Software Engineering Processes                         , SEN-201:00080       , Include high quality documentation in code
+ SEN-201         , Software Engineering Processes                         , SEN-201:00090       , Choose a software process paradigm
+ SEN-201         , Software Engineering Processes                         , SEN-201:00100       , Explain the difference between a software engineering approach to development and an ad hoc approach
+ SYS-102         , Basic Computer Architecture                            , SYS-102:00040       , Interrupt-driven programming
+ SYS-102         , Basic Computer Architecture                            , SYS-102:00060       , State machine design
+ SYS-102         , Basic Computer Architecture                            , SYS-102:00070       , Computer architecture
+ SYS-102         , Basic Computer Architecture                            , SYS-102:00080       , Assembly Programming
+ URD-201         , Undergraduate R&D project (3)                          , URD-201:00010       , Demonstrate skills related to solving societal problems while considering the constraints faced by real world stakeholders
