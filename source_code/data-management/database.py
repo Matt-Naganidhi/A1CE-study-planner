@@ -25,7 +25,7 @@ for index, row in df.iterrows():
     cursor.execute('''
     INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name)
     VALUES (?, ?, ?, ?)
-    ''', (row['competency_code'], row['competency_name'], row['skill_code'], row['skill_name']))
+    ''', (row['competency_code'], row['competency_name'], row['skill_code'], row['skill_description']))
 
 # Commit the transaction to save changes
 con.commit()
