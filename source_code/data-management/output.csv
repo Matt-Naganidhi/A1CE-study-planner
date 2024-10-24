@@ -1,3 +1,4 @@
+ competency_code ,                         title                          , assessed_skill_code ,                                                                 title                                                                  
  AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00010       , Understand text indexing and retrieval
  AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00020       , Understand document representation and similarity measures
  AIC-401         ," Information Retrieval, Extraction, Search and Indexing ", AIC-401:00030       , Understand ranking algorithms

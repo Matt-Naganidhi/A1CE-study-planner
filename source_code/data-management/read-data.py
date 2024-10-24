@@ -15,7 +15,7 @@ def openFile(input_file_name, output_file_name):
     input_file_path = os.path.join(script_dir, input_file_name)
 
     # Read the CSV file with the specified delimiter, skipping the header and footer
-    read_file = pd.read_csv(input_file_path, delimiter='|', skiprows=2, skipfooter=2, engine='python')
+    read_file = pd.read_csv(input_file_path, delimiter='|',skiprows=[1], skipfooter=2, engine='python')
     # Construct the full output file path
     
     output_file_path = os.path.join(script_dir, output_file_name)
