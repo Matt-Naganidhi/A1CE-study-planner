@@ -1,0 +1,66 @@
+************* Module Task
+Task.py:6:19: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:32:0: C0301: Line too long (105/100) (line-too-long)
+Task.py:39:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:57:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:66:90: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:69:85: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:72:85: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:84:79: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:85:94: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:86:84: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:87:84: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:88:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:92:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:93:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:94:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:95:0: C0303: Trailing whitespace (trailing-whitespace)
+Task.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+Task.py:1:0: C0103: Module name "Task" doesn't conform to snake_case naming style (invalid-name)
+Task.py:6:0: E0401: Unable to import 'pandas' (import-error)
+Task.py:9:0: C0116: Missing function or method docstring (missing-function-docstring)
+Task.py:9:0: C0103: Function name "Task_info" doesn't conform to snake_case naming style (invalid-name)
+Task.py:17:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+Task.py:31:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+Task.py:42:37: E0602: Undefined variable 'end_date' (undefined-variable)
+Task.py:9:15: W0613: Unused argument 'roadmap_information' (unused-argument)
+Task.py:42:4: W0612: Unused variable 'task_duration' (unused-variable)
+Task.py:46:0: C0116: Missing function or method docstring (missing-function-docstring)
+Task.py:48:10: E0602: Undefined variable 'sqlite3' (undefined-variable)
+Task.py:83:0: C0116: Missing function or method docstring (missing-function-docstring)
+Task.py:6:0: W0611: Unused pandas imported as pd (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 0.87/10 (previous run: 0.87/10, +0.00)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
