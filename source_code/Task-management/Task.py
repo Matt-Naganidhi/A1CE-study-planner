@@ -5,7 +5,38 @@ import os
 import csv
 import pandas as pd 
 
+
 def Task_info (roadmap_information, current_device_date, user_input_array):
+    # Navigate to the specified directory and read from 'output.csv'
+    os.chdir('../data-management')
+    input_path = 'output.csv'
+    output_path = 'roadmap_task.csv'
+
+    # Read input CSV and save task data to a list
+    roadmap_tasks = []
+    with open(input_path, mode='r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            task = {
+                'task_id': row['competency_code'],
+                'competency_name': row['title'],
+                'skill_code': row['assessed_skill_code'],
+                'skill_name': row['title'],
+                'start_date': None,   # Placeholder if dates need to be added
+                'end_date': None
+            }
+            roadmap_tasks.append(task)
+
+    # Write to roadmap_task.csv in the current directory
+    with open(output_path, mode='w', newline='') as file:
+        fieldnames = ['task_id', 'competency_name', 'skill_code', 'skill_name', 'start_date', 'end_date']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for task in roadmap_tasks:
+            writer.writerow(task)
+
+    print(f"Data from {input_path} has been written to {output_path}.")
+    
     #task name
     #task duration
     task_duration = user_input_array[end_date] - current_device_date
@@ -57,6 +88,8 @@ def user_input():
     
     #return the user inputs as a tuple
     return task_id, new_competency_name, new_skill_code, new_skill_name
+
+    
     
     
     
