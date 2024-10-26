@@ -20,6 +20,7 @@ def openFile(input_file_name, output_file_name):
     
     output_file_path = os.path.join(script_dir, output_file_name)
     # Save the cleaned DataFrame to the output CSV file
+    
     read_file.to_csv(output_file_path, index=False)
 
     # Open the output CSV file and print its content

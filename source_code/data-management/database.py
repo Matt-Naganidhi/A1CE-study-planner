@@ -4,7 +4,6 @@
 #Created by Supakorn Etitum (JackJack) on 23 October 2024
 
 import sqlite3
-from sqlite3 import SQLITE_PRAGMA
 import pandas as pd
 
 # Create/connect to the database
@@ -15,13 +14,15 @@ cursor = con.cursor()
 # Read the CSV file into a DataFrame
 df = pd.read_csv('/Users/jayj/A1CE-study-planner/source_code/data-management/output.csv')
 
+# Create the table (if it doesn't exist already)
+cursor.execute('''CREATE TABLE IF NOT EXISTS roadmap (competency_code TEXT,competency_name TEXT,skill_code TEXT,skill_name TEXT)''')
+
 df.columns = df.columns.str.strip()
 print(df.columns) 
 
 print(df['title'])
 
-# Create the table (if it doesn't exist already)
-cursor.execute('''CREATE TABLE IF NOT EXISTS roadmap (competency_code TEXT,competency_name TEXT,skill_code TEXT,skill_name TEXT)''')
+
 
 # Insert the data from the DataFrame into the table
 for index, row in df.iterrows():
