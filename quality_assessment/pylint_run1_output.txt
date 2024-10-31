@@ -1,0 +1,43 @@
+************* Module database
+database.py:23:17: C0303: Trailing whitespace (trailing-whitespace)
+database.py:51:0: C0304: Final newline missing (missing-final-newline)
+database.py:51:0: C0304: Final newline missing (missing-final-newline)
+database.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+database.py:49:0: W0105: String statement has no effect (pointless-string-statement)
+
+------------------------------------------------------------------
+Your code has been rated at 7.22/10 (previous run: 7.65/10, -0.42)
+
+************* Module read_data
+read_data.py:21:0: C0301: Line too long (103/100) (line-too-long)
+read_data.py:23:0: C0303: Trailing whitespace (trailing-whitespace)
+read_data.py:26:0: C0303: Trailing whitespace (trailing-whitespace)
+read_data.py:13:0: C0116: Missing function or method docstring (missing-function-docstring)
+read_data.py:30:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+read_data.py:37:0: E0602: Undefined variable 'openFile' (undefined-variable)
+
+-----------------------------------
+Your code has been rated at 3.33/10
+
+************* Module convert_to_dict
+convert_to_dict.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+convert_to_dict.py:19:5: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+convert_to_dict.py:11:0: C0411: standard import "import csv" should be placed before "import pandas as pd" (wrong-import-order)
+convert_to_dict.py:10:0: W0611: Unused pandas imported as pd (unused-import)
+convert_to_dict.py:11:0: W0611: Unused import csv (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 7.22/10 (previous run: 7.22/10, +0.00)
+
+************* Module task_database
+task_database.py:15:0: C0301: Line too long (155/100) (line-too-long)
+task_database.py:24:0: C0305: Trailing newlines (trailing-newlines)
+task_database.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+task_database.py:10:0: C0116: Missing function or method docstring (missing-function-docstring)
+task_database.py:10:20: W0613: Unused argument 'database_name' (unused-argument)
+task_database.py:17:0: C0116: Missing function or method docstring (missing-function-docstring)
+task_database.py:7:0: W0611: Unused pandas imported as pd (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 3.00/10 (previous run: 3.00/10, +0.00)
+

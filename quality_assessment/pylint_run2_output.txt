@@ -1,0 +1,26 @@
+************* Module database
+database.py:26:17: C0303: Trailing whitespace (trailing-whitespace)
+
+------------------------------------------------------------------
+Your code has been rated at 9.41/10 (previous run: 7.22/10, +2.19)
+
+************* Module read_data
+read_data.py:13:0: C0116: Missing function or method docstring (missing-function-docstring)
+read_data.py:34:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+
+------------------------------------------------------------------
+Your code has been rated at 8.67/10 (previous run: 3.33/10, +3.33)
+
+************* Module convert_to_dict
+convert_to_dict.py:20:5: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+convert_to_dict.py:10:0: W0611: Unused import csv (unused-import)
+
+------------------------------------------------------------------
+Your code has been rated at 8.82/10 (previous run: 7.22/10, +1.60)
+
+************* Module task_database
+task_database.py:11:0: C0116: Missing function or method docstring (missing-function-docstring)
+task_database.py:23:0: C0116: Missing function or method docstring (missing-function-docstring)
+
+------------------------------------------------------------------
+Your code has been rated at 7.78/10 (previous run: 6.67/10, +1.11)
