@@ -11,7 +11,6 @@ def Task_info (roadmap_information, current_device_date, user_input_array):
     os.chdir('../data-management')
     input_path = 'output.csv'
     output_path = 'roadmap_task.csv'
-
     # Read input CSV and save task data to a list
     roadmap_tasks = []
     with open(input_path, mode='r') as file:
@@ -29,12 +28,12 @@ def Task_info (roadmap_information, current_device_date, user_input_array):
 
     # Write to roadmap_task.csv in the current directory
     with open(output_path, mode='w', newline='') as file:
-        fieldnames = ['task_id', 'competency_name', 'skill_code', 'skill_name', 'start_date', 'end_date']
+        fieldnames = ['task_id', 'competency_name', 'skill_code', 'skill_name', 
+                      'start_date', 'end_date']
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         for task in roadmap_tasks:
             writer.writerow(task)
-
     print(f"Data from {input_path} has been written to {output_path}.")
     
     #task name
@@ -42,12 +41,11 @@ def Task_info (roadmap_information, current_device_date, user_input_array):
     task_duration = user_input_array[end_date] - current_device_date
     #task description
 
-
 def modify_task():
     #connect to the database
     con = sqlite3.connect('roadmap.db')
     cursor = con.cursor()
-
+   
     #get input to modify
     task_id, new_competency_name, new_skill_code, new_skill_name = user_input()
 
