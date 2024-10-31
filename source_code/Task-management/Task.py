@@ -88,6 +88,33 @@ def modify_task():
 
     # Close the database connection
     con.close()
+
+def delete_task():
+    con = sqlite3.connect('roadmap.db')
+    cursor = con.cursor()
+
+    task_id = input("Enter the Task ID you want to delete (competency_code):")
+    
+    cursor.execute("SELECT * FROM roadmap WHERE competency_code = ?", (task_id,))
+    row = cursor.fetchone()
+
+    if row is None:
+        print(f"Task with competency_code {task_id} not found.")
+        con.close()
+        return
+    
+    confirm = input(f"Are you sure you want to delete the task with competency_code {task_id}? (yes/no): ")
+    if confirm.lower() != 'yes':
+        print("Deletion canceled.")
+        con.close()
+        return
+        
+    cursor.execute("DELETE FROM roadmap WHERE competency_code = ?", (task_id,))
+    con.commit()
+
+    print(f"Task with competency_code {task_id} has been successfully deleted.")
+
+    con.close()
     
 #get task id, new competency name, skill code, skill name
 def user_input():
