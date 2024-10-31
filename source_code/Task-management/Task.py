@@ -6,7 +6,7 @@ import csv
 import pandas as pd 
 
 
-def Task_info (roadmap_information, current_device_date, user_input_array):
+def task_info (roadmap_information, current_device_date, user_input_array):
     # Navigate to the specified directory and read from 'output.csv'
     os.chdir('../data-management')
     input_path = 'output.csv'
@@ -38,8 +38,21 @@ def Task_info (roadmap_information, current_device_date, user_input_array):
     
     #task name
     #task duration
-    task_duration = user_input_array[end_date] - current_device_date
+    end_date = datetime.strptime(user_input_array.get('end_date'), "%Y-%m%d")
+    start_date = datetime.strptime(current_device_date, "%Y-%m%d")
+    task_duration = (end_date - start_date).days
     #task description
+
+    with open(output_path, mode='w', newline='') as file:
+        fieldnames = ['task_id', 'competency_name', 'skill_code', 'skill_name',
+                      'start_date', 'end_date']
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for task in roadmap_tasks:
+            writer.writerow(task)
+        print(f"Data from {input_path} has been written to {output_path} with calculatedtask duration of {task_duration} days.")
+        
+        
 
 def modify_task():
     #connect to the database
@@ -71,12 +84,11 @@ def modify_task():
                        (new_skill_name, task_id))
 
     con.commit()
-
-    #print a message to comfirm the updated task
     print(f"Task with competency_code {task_id} has been successfully modified.")
 
     # Close the database connection
     con.close()
+    
 #get task id, new competency name, skill code, skill name
 def user_input():
     task_id = input("Enter the Task ID you want to modify (competency_code): ") 
