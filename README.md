@@ -1,7 +1,3 @@
 # A1CE-study-planner
 by the JIGler 
-<<<<<<< HEAD
-added by team a
-=======
-Added by Team B
->>>>>>> 466945853eae0151b50cc12873024bb79292bdf2
+This project is created as a part of SEN-201 Software Engineering Process class at CMKL.
