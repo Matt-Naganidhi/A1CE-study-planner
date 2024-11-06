@@ -8,99 +8,117 @@
 # output: none
 
 # Created by Gold, 20 October 2024
-# Modified by Gold, 29 October 2024
+# Modified by Gold, 4 November 2024
 
 import tkinter as tk  # graphic library for GUI
-from tkinter import ttk
-from tkinter import filedialog  # for importing file
+from tkinter import ttk  # extra function from the graphic library
+from tkinter import filedialog, messagebox  # for importing file
 
-DEFAULTFONT = ("Arial", 12)  # define default font
+DEFAULTFONT = ("Helvetica", 12, "bold")  # define default font
+BIGFONT = ("Helvetica", 24, "bold")  # define big font
 
 
-class App(tk.Tk):
-    # __init__ function for class tkinterApp
+# Main application class that handles page switching
+class MainApp(tk.Tk):
     def __init__(self, *args, **kwargs):
-        # __init__ function for class Tk
-        tk.Tk.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+        # Set window geometry to 1000x800
+        self.geometry("1400x800")
         self.title("A1CE Study Planner")
+
+        # Container to hold all pages
         container = tk.Frame(self)
+        container.pack(fill="both", expand=True)
 
-        # set initial size of the window
+        # Dictionary to store pages
+        self.pages = {}
 
-        self.geometry("1000x800")
-        self.grid_columnconfigure(0, weight=1)
-        container.grid(row=0, column=0, sticky="nsew")
+        # Initialize pages
+        for Page in (MainPage, Planner, Undated):
+            page = Page(container, self)
+            self.pages[Page] = page
+            page.grid(row=0, column=0, sticky="nsew")
 
-        # container.grid_columnconfigure(0, weight=1)
-        # container.grid_rowconfigure(0, weight=1)
+        # set style of treeview
+        ttk.Style().configure("Treeview", background="black",
+                foreground="white")
 
-        self.frames = {}
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-        # for frames in the 3 pages, create frame to store them
-        for F in (MainPage, Planner, Undated):
-            frame = F(container, self)
+        
 
-            self.frames[F] = frame
-
-            frame.grid(row=0, column=0, sticky="nsew")
+        # Show the first page
         self.show_frame(MainPage)
 
-    # show the chosen frame
-    # input: Name of frame
-    # output: None
-    def show_frame(self, cont):
-        frame = self.frames[cont]
-        frame.tkraise()  # bring to frame in
+        #self.protocol("WM_DELETE_WINDOW",self.on_closing)
+
+    def show_frame(self, page_class):
+        page = self.pages[page_class]
+        page.tkraise()  # Bring the page to the front
+    
+    def on_closing(self):
+        if messagebox.askyesno(title="Quit?", message="Do you want to quit"):
+            print("Saving files")
+            self.destroy()
 
 
-# Main page
+# Main page 
 class MainPage(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self)
-        # self.grid_columnconfigure(0, weight=1)
+        super().__init__(parent)
 
-        # Main page label
-        # Initialize style
-        # Create style used by default for all Frames
+        # Configure page grid layout
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure((0,1), weight=1)
 
-        menu_frame = tk.LabelFrame(self, text="function", bg="#2a2f54", fg='black')
-        menu_frame.place(x=0, y=0, relwidth=0.2, relheight=1)
+        # Menu frame that contain button to go to all pages
+        menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
+        menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
-        menu_frame.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+        menu_frame.rowconfigure((0, 1, 2), weight=1)
 
-        to_main = tk.Button(menu_frame, text="Main", width=20, height=2,
-                                   font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
+        to_main = tk.Button(menu_frame, text="Main", width=20, height=5, 
+                                fg="white", bg="black",
+                                font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
         to_main.grid(row=0, column=0, padx=10, pady=10)
 
-        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=2,
-                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
-        to_planner.grid(row=2, column=0, padx=10, pady=10)
+        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, 
+                                fg="white", bg="black",
+                                font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
+        to_planner.grid(row=1, column=0, padx=10, pady=10)
 
-        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=2,
-                               font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
-        to_undated.grid(row=4, column=0, padx=10, pady=10)
+        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=5, 
+                                fg="white", bg="black",
+                                font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
+        to_undated.grid(row=2, column=0, padx=10, pady=10)
 
-
-        function_frame = tk.LabelFrame(self, text="option", bg="#ff9851", fg='black')
-        function_frame.place(relx=0.2, y=0, relwidth=0.8, relheight=1)
+        # Function frame that contain all the function of the page
+        function_frame = tk.LabelFrame(self, bg="#2d3960", fg='white', bd=1)
+        function_frame.place(relx=0.15, y=0, relwidth=0.85, relheight=1)
         function_frame.columnconfigure((0, 1, 2), weight=1)
         function_frame.rowconfigure((0, 1, 2, 3, 4), weight=1)
 
+        # Label frame at the top
+        label = tk.Label(function_frame, text=".csv file", font=DEFAULTFONT, bg ="#2d3960", fg="white")
+        label.grid(row=0, column=1, pady=10, padx=10, sticky="s")
+
 
         # Import Roadmap Button
-        import_button = tk.Button(function_frame, text="Import Roadmap", width=20, height=2,
+        import_button = tk.Button(function_frame, text="Import Roadmap", width=20, height=2, fg="white", bg="black",
                                        font=DEFAULTFONT, command=self.open_file)
-        import_button.grid(row=1, column=1, padx=20, pady=10)
+        import_button.grid(row=1, column=1, padx=20, pady=40, sticky="nsew")
 
         # Clear Roadmap Button
-        clear_button = tk.Button(function_frame, text="Clear Roadmap", width=20, height=2,
+        clear_button = tk.Button(function_frame, text="Clear Roadmap", width=20, height=2, fg="white", bg="black",
                                       font=DEFAULTFONT)
-        clear_button.grid(row=2, column=1, padx=20, pady=40)
+        clear_button.grid(row=2, column=1, padx=20, pady=40, sticky="nsew")
 
         # View Planner Button
-        planner_button = tk.Button(function_frame, text="View Planner", width=20, height=2,
+        planner_button = tk.Button(function_frame, text="View Planner", width=20, height=2, fg="white", bg="black",
                                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
-        planner_button.grid(row=3, column=1, padx=20, pady=40)
+        planner_button.grid(row=3, column=1, padx=20, pady=40, sticky="nsew")
 
     # Ask for filepath and print it
     # input: None
@@ -110,105 +128,156 @@ class MainPage(tk.Frame):
         print(filepath)
 
 
-# Display Task
+# Planner page
 class Planner(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self)
+        super().__init__(parent)
+
+        # Configure page grid layout
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        menu_frame = tk.LabelFrame(self, text="function", bg="#2a2f54", fg='black')
-        menu_frame.place(x=0, y=0, relwidth=0.2, relheight=1)
+        # Menu frame that contain button to go to all pages
+        menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
+        menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
-        menu_frame.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+        menu_frame.rowconfigure((0, 1, 2), weight=1)
 
-        to_main = tk.Button(menu_frame, text="Main", width=20, height=2,
-                            font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
+        to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
+                                   font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
         to_main.grid(row=0, column=0, padx=10, pady=10)
 
-        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=2,
-                               font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
-        to_planner.grid(row=2, column=0, padx=10, pady=10)
+        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, fg="white", bg="black",
+                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
+        to_planner.grid(row=1, column=0, padx=10, pady=10)
 
-        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=2,
+        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=5, 
+                                fg="white", bg="black",
                                font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
-        to_undated.grid(row=4, column=0, padx=10, pady=10)
+        to_undated.grid(row=2, column=0, padx=10, pady=10)
 
-        function_frame = tk.LabelFrame(self, text="option", bg="#ff9851", fg='black')
-        function_frame.place(relx=0.2, y=0, relwidth=0.8, relheight=1)
+        # Function frame that contain all the function of the page
+        function_frame = tk.LabelFrame(self, bg="#2d3960", fg='white', bd=1)
+        function_frame.place(relx=0.15, y=0, relwidth=0.85, relheight=1)
         function_frame.columnconfigure(0, weight=1)
-        function_frame.rowconfigure((0, 1, 2, 3, 4), weight=1)
-
-
-        label = tk.Label(function_frame, text="Planner", font=DEFAULTFONT)
+        function_frame.rowconfigure((0, 1, 2, 3), weight=1)
+        
+        # Label of the page
+        label = tk.Label(function_frame, text="Planner", font=BIGFONT, bg ="#2d3960", fg="white")
         label.grid(row=0, column=0, pady=10, padx=10)
 
-        table = ttk.Treeview(function_frame, columns=("comp_id", "comp_name", "skill_code", "skill_name"), show="headings")
+        table = ttk.Treeview(function_frame, columns=("comp_id", "comp_name", "skill_code", "skill_name", "duration"), show="headings")
+        table.column("comp_id", width=10)
+        table.column("comp_name", width=100)
+        table.column("skill_code", width=10)
+        table.column("skill_name", width=50)
+        table.column("duration", width=10)
+
         table.heading('comp_id', text="Competency Code")
         table.heading('comp_name', text="Competency Name")
         table.heading('skill_code', text="Skill Code")
         table.heading('skill_name', text="Skill Name")
-        table.grid(row=2, column=0, sticky="nsew")
+        table.heading('duration', text="Duration")
+        table.grid(row=1, column=0, sticky="nsew", padx=20)
+      
         table.insert(parent='', index=0, values=("AIC-401", " Information Retrieval, Extraction, Search and Indexing "
                                                  , " AIC-401:00030", " Understand ranking algorithms"))
+        
+        # scroll bar
+        scroll = tk.Scrollbar(function_frame, orient='vertical', command=table.yview, bg='red')
+        table.configure(yscrollcommand=scroll.set)
+        scroll.grid(row=1, column=0, sticky="nse")
 
         main = tk.Button(function_frame, text="back", width=20, height=2,
                              font=DEFAULTFONT,
                              command=lambda: controller.show_frame(MainPage))
-        main.grid(row=3, column=0, sticky="s", padx=20, pady=40)
+        main.grid(row=3, column=0, sticky="w", padx=20, pady=40)
 
         lastpage = tk.Button(function_frame, text="next", width=20, height=2,
                                         font=DEFAULTFONT,
                               command=lambda: controller.show_frame(Undated))
-        lastpage.grid(row=4, column=0, sticky="s", padx=20, pady=40)
+        lastpage.grid(row=3, column=0, sticky="e", padx=20, pady=40)
+
+        
+       
 
 
-# Display Undated Task
+
+# Page to show undated
 class Undated(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self)
+        super().__init__(parent)
+
+        # Configure page grid layout
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        menu_frame = tk.LabelFrame(self, text="function", bg="#2a2f54", fg='black')
-        menu_frame.place(x=0, y=0, relwidth=0.2, relheight=1)
+        # Menu frame that contain button to go to all pages
+        menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
+        menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
-        menu_frame.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+        menu_frame.rowconfigure((0, 1, 2), weight=1)
 
-        to_main = tk.Button(menu_frame, text="Main", width=20, height=2,
-                            font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
+        to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
+                                   font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
         to_main.grid(row=0, column=0, padx=10, pady=10)
 
-        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=2,
-                               font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
-        to_planner.grid(row=2, column=0, padx=10, pady=10)
+        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, fg="white", bg="black",
+                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
+        to_planner.grid(row=1, column=0, padx=10, pady=10)
 
-        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=2,
+        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=5, 
+                                fg="white", bg="black",
                                font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
-        to_undated.grid(row=4, column=0, padx=10, pady=10)
+        to_undated.grid(row=2, column=0, padx=10, pady=10)
 
-        function_frame = tk.LabelFrame(self, text="option", bg="#ff9851", fg='black')
-        function_frame.place(relx=0.2, y=0, relwidth=0.8, relheight=1)
+        # Function frame that contain all the function of the page
+        function_frame = tk.LabelFrame(self, bg="#333e61", fg='white', bd=1)
+        function_frame.place(relx=0.15, y=0, relwidth=0.85, relheight=1)
         function_frame.columnconfigure(0, weight=1)
-        function_frame.rowconfigure((0, 1, 2, 3, 4), weight=1)
+        function_frame.rowconfigure((0, 1, 2, 3), weight=1)
 
-        label = tk.Label(function_frame, text="Undated", font=DEFAULTFONT)
+        # Label at the top of the page
+        label = tk.Label(function_frame, text="Undated", font=BIGFONT, bg ="#333e61", fg="white")
         label.grid(row=0, column=0, pady=10, padx=10)
 
-        table2 = ttk.Treeview(function_frame, columns=("comp_id", "comp_name",
-                                                       "skill_code", "skill_name"), show="headings")
-        table2.heading('comp_id', text="Competency Code")
-        table2.heading('comp_name', text="Competency Name")
-        table2.heading('skill_code', text="Skill Code")
-        table2.heading('skill_name', text="Skill Name")
-        table2.grid(row=1, column=0, sticky="nsew")
-        table2.insert(parent='', index=0, values=("AIC-401", "Undated Task", "Undated Task", "Undated Task"))
-        table2.insert(parent='', index=1, values=("AIC-401", "Undated Task", "Undated Task", "Undated Task"))
+        # Table for data display
+        table = ttk.Treeview(function_frame, columns=("comp_id", "comp_name", "skill_code", "skill_name", "duration"), show="headings")
+        table.column("comp_id", width=10)
+        table.column("comp_name", width=100)
+        table.column("skill_code", width=10)
+        table.column("skill_name", width=50)
+        table.column("duration", width=10)
 
-        # for some reason editing this button mess with the whole screen
-        backplanner = tk.Button(self, text="", width=1, height=40, font=DEFAULTFONT,
-                          command=lambda: controller.show_frame(Planner))
-        backplanner.grid(row=4, column=6, sticky="e", padx=20, pady=40)
+        table.heading('comp_id', text="Competency Code")
+        table.heading('comp_name', text="Competency Name")
+        table.heading('skill_code', text="Skill Code")
+        table.heading('skill_name', text="Skill Name")
+        table.heading('duration', text="Duration")
+        table.grid(row=1, column=0, sticky="nsew", padx=20)
+        table.insert(parent='', index=0, values=("AIC-401", " Information Retrieval, Extraction, Search and Indexing "
+                                                 , " AIC-401:00030", " Understand ranking algorithms", "2 days"))
+
+        # scroll bar
+        scroll = tk.Scrollbar(function_frame, orient='vertical', command=table.yview, bg='red')
+        table.configure(yscrollcommand=scroll.set)
+        scroll.grid(row=1, column=0, sticky="nse")
 
 
-# call to initiate app
-app = App()
-app.mainloop()
+        toplanner = tk.Button(function_frame, text="back to planner", width=20, height=2,
+                             font=DEFAULTFONT,
+                             command=lambda: controller.show_frame(Planner))
+        toplanner.grid(row=3, column=0, sticky="w", padx=20, pady=40)
+
+        tomain = tk.Button(function_frame, text="back to main", width=20, height=2,
+                                        font=DEFAULTFONT,
+                              command=lambda: controller.show_frame(MainPage))
+        tomain.grid(row=3, column=0, sticky="e", padx=20, pady=40)
+
+
+
+# Run the application
+if __name__ == "__main__":
+    app = MainApp()
+    app.mainloop()
+    
