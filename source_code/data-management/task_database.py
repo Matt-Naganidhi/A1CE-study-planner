@@ -12,7 +12,17 @@ def create_database():
 
     cursor = connect.cursor()
 
-    cursor.execute('''CREATE TABLE IF NOT EXISTS tasks (competency_code TEXT,competency_name TEXT,skill_code TEXT,task_description TEXT, duration TEXT)''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS tasks (
+        task_id TEXT,
+        competency_name TEXT,
+        skill_code TEXT,
+        skill_name TEXT,
+        start_date TEXT,
+        end_date TEXT,
+        duration INTEGER    
+    )
+    ''')
 
 def update_database():
     connect = sqlite3.connect('tasks.db')
