@@ -1,86 +1,66 @@
+# This code is used to store user's roadmap plan and modify the database itself
+# Input is the CSV that is converted from 'read-data.py'
+
+# Created by Supakorn Etitum (JackJack) on 23 October 2024
+
 import sqlite3
 import pandas as pd
 
-
 # Create/connect to the database
-<<<<<<< HEAD
 def init_database(inputfile):
     con = sqlite3.connect('roadmap.db')
     # Create a cursor to execute commands on the database
     cursor = con.cursor()
-=======
-con = sqlite3.connect('roadmap.db')
-cursor = con.cursor()
->>>>>>> a68776a43ea105cfbe23a132eac1d7d1aa197436
 
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv(inputfile)
+    # Read the CSV file into a DataFrame with specified encoding
+    df = pd.read_csv(inputfile, encoding='ISO-8859-1')  # Change encoding as necessary
 
-<<<<<<< HEAD
-    # Create the table (if it doesn't exist already)
-    cursor.execute('''CREATE TABLE IF NOT EXISTS roadmap (competency_code TEXT,competency_name TEXT,skill_code TEXT,skill_name TEXT)''')
-
+    # Strip whitespace from column names
     df.columns = df.columns.str.strip()
-    print(df.columns)
+    
+    # Debug print to check the DataFrame columns
+    print("Columns in DataFrame:", df.columns.tolist())
 
-    print(df['title'])
-=======
-# Remove any extra spaces from column names
-df.columns = df.columns.str.strip()
-
-# Rename columns to avoid duplicates
-df.columns = ['competency_code', 'competency_name', 'skill_code', 'skill_name']
->>>>>>> a68776a43ea105cfbe23a132eac1d7d1aa197436
-
-# Create the table if it doesn't exist
-cursor.execute('''
+    # Create the table (if it doesn't exist already)
+    cursor.execute('''
     CREATE TABLE IF NOT EXISTS roadmap (
         competency_code TEXT,
         competency_name TEXT,
         skill_code TEXT,
         skill_name TEXT
     )
-''')
+    ''')
 
-<<<<<<< HEAD
-
-# Insert the data from the DataFrame into the table
+    # Insert the data from the DataFrame into the table
     for index, row in df.iterrows():
-        cursor.execute('''
-        INSERT INTO roadmap (competency_code, title, assessed_skill_code, title)
-        VALUES (?, ?, ?, ?)
-        ''', (row['competency_code'], row['competency_name'], row['skill_code'], row['skill_name']))
+        try:
+            cursor.execute('''
+            INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name)
+            VALUES (?, ?, ?, ?)
+            ''', (row['competency_code'], row['competency_name'], row['skill_code'], row['skill_name']))
+        except KeyError as e:
+            print(f"KeyError: {e} - Check if the column names in the CSV match the expected names.")
 
     # Commit the transaction to save changes
     con.commit()
 
-    # Fetch and print all rows from the 'roadmap' table
-    cursor.execute("SELECT * FROM roadmap")
-    rows = cursor.fetchall()
-
-# Print all rows
-# for row in rows:
-#     print(row)
-
-# Close the connection
+    # Close the connection
     con.close()
-=======
-# Insert data into the table
-for index, row in df.iterrows():
-    cursor.execute('''
-        INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name)
-        VALUES (?, ?, ?, ?)
-    ''', (row['competency_code'], row['competency_name'], row['skill_code'], row['skill_name']))
 
-# Commit changes
-con.commit()
+def read_roadmap_data():
+    con = sqlite3.connect('roadmap.db')
+    # Read the data from the roadmap table into a DataFrame
+    df = pd.read_sql_query("SELECT * FROM roadmap", con)
+    
+    # Print the DataFrame
+    print(df)
+    
+    # Close the connection
+    con.close()
 
-# Fetch and print all rows
-cursor.execute("SELECT * FROM roadmap")
-rows = cursor.fetchall()
-for row in rows:
-    print(row)
-
-# Close the connection
-con.close()
->>>>>>> a68776a43ea105cfbe23a132eac1d7d1aa197436
+if __name__ == "__main__":
+    # Ensure to provide the correct path to the CSV file
+    init_database('/Users/jayj/A1CE-study-planner/source_code/data-management/output.csv')  # Change this to your actual CSV file path
+    
+    # Call read function to display the tasks
+    read_roadmap_data()
