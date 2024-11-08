@@ -135,7 +135,7 @@ class MainPage(tk.Frame):
         print(filepath)
         check = init_database(filepath)
         if not check:
-            print("L")
+            print("Cancel Import")
 
         
 # Planner page
