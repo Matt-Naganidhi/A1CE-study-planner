@@ -11,8 +11,13 @@
 # Modified by Gold, 4 November 2024
 
 import tkinter as tk  # graphic library for GUI
+import sqlite3
+import pandas as pd
 from tkinter import ttk  # extra function from the graphic library
 from tkinter import filedialog, messagebox  # for importing file
+
+from database import init_database, read_roadmap_data
+import Task
 
 DEFAULTFONT = ("Helvetica", 12, "bold")  # define default font
 BIGFONT = ("Helvetica", 24, "bold")  # define big font
@@ -52,7 +57,7 @@ class MainApp(tk.Tk):
         # Show the first page
         self.show_frame(MainPage)
 
-        #self.protocol("WM_DELETE_WINDOW",self.on_closing)
+        self.protocol("WM_DELETE_WINDOW",self.on_closing)
 
     def show_frame(self, page_class):
         page = self.pages[page_class]
@@ -71,7 +76,7 @@ class MainPage(tk.Frame):
 
         # Configure page grid layout
         self.grid_rowconfigure(1, weight=1)
-        self.grid_columnconfigure((0,1), weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
         # Menu frame that contain button to go to all pages
         menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
@@ -126,6 +131,12 @@ class MainPage(tk.Frame):
     def open_file(self):
         filepath = filedialog.askopenfilename()
         print(filepath)
+        init_database(filepath)
+        read_roadmap_data()
+
+        
+
+
 
 
 # Planner page
@@ -179,6 +190,13 @@ class Planner(tk.Frame):
         table.heading('skill_name', text="Skill Name")
         table.heading('duration', text="Duration")
         table.grid(row=1, column=0, sticky="nsew", padx=20)
+
+        con = sqlite3.connect('roadmap.db')
+        # Read the data from the roadmap table into a DataFrame
+        df = pd.read_sql_query("SELECT * FROM roadmap", con)
+        
+        
+        con.close()
       
         table.insert(parent='', index=0, values=("AIC-401", " Information Retrieval, Extraction, Search and Indexing "
                                                  , " AIC-401:00030", " Understand ranking algorithms"))
@@ -198,11 +216,11 @@ class Planner(tk.Frame):
                               command=lambda: controller.show_frame(Undated))
         lastpage.grid(row=3, column=0, sticky="e", padx=20, pady=40)
 
-        
+    def init_planner():
+        con = sqlite3.connect('roadmap.db')
+        cursor = con.cursor()
+
        
-
-
-
 # Page to show undated
 class Undated(tk.Frame):
     def __init__(self, parent, controller):
