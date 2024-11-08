@@ -8,7 +8,7 @@
 # output: none
 
 # Created by Gold, 20 October 2024
-# Modified by Gold, 4 November 2024
+# Modified by Gold, 8 November 2024
 
 import tkinter as tk  # graphic library for GUI
 import sqlite3
@@ -67,10 +67,11 @@ class MainApp(tk.Tk):
         if messagebox.askyesno(title="Quit?", message="Do you want to quit"):
             print("Saving files")
             self.destroy()
-
+            
 
 # Main page 
 class MainPage(tk.Frame):
+    
     def __init__(self, parent, controller):
         super().__init__(parent)
 
@@ -114,6 +115,7 @@ class MainPage(tk.Frame):
         import_button = tk.Button(function_frame, text="Import Roadmap", width=20, height=2, fg="white", bg="black",
                                        font=DEFAULTFONT, command=self.open_file)
         import_button.grid(row=1, column=1, padx=20, pady=40, sticky="nsew")
+        
 
         # Clear Roadmap Button
         clear_button = tk.Button(function_frame, text="Clear Roadmap", width=20, height=2, fg="white", bg="black",
@@ -131,14 +133,11 @@ class MainPage(tk.Frame):
     def open_file(self):
         filepath = filedialog.askopenfilename()
         print(filepath)
-        init_database(filepath)
-        read_roadmap_data()
+        check = init_database(filepath)
+        if not check:
+            print("L")
 
         
-
-
-
-
 # Planner page
 class Planner(tk.Frame):
     def __init__(self, parent, controller):
@@ -191,24 +190,19 @@ class Planner(tk.Frame):
         table.heading('duration', text="Duration")
         table.grid(row=1, column=0, sticky="nsew", padx=20)
 
-        con = sqlite3.connect('roadmap.db')
-        # Read the data from the roadmap table into a DataFrame
-        df = pd.read_sql_query("SELECT * FROM roadmap", con)
-        
-        
-        con.close()
-      
-        table.insert(parent='', index=0, values=("AIC-401", " Information Retrieval, Extraction, Search and Indexing "
-                                                 , " AIC-401:00030", " Understand ranking algorithms"))
-        
+
+
         # scroll bar
         scroll = tk.Scrollbar(function_frame, orient='vertical', command=table.yview, bg='red')
         table.configure(yscrollcommand=scroll.set)
         scroll.grid(row=1, column=0, sticky="nse")
+ 
+                 
+        
 
-        main = tk.Button(function_frame, text="back", width=20, height=2,
+        main = tk.Button(function_frame, text="initiate page", width=20, height=2,
                              font=DEFAULTFONT,
-                             command=lambda: controller.show_frame(MainPage))
+                             command=lambda: self.init_planner(table))
         main.grid(row=3, column=0, sticky="w", padx=20, pady=40)
 
         lastpage = tk.Button(function_frame, text="next", width=20, height=2,
@@ -216,9 +210,24 @@ class Planner(tk.Frame):
                               command=lambda: controller.show_frame(Undated))
         lastpage.grid(row=3, column=0, sticky="e", padx=20, pady=40)
 
-    def init_planner():
+    def init_planner(self, table):
+        # Connect to the SQLite database and fetch data
         con = sqlite3.connect('roadmap.db')
         cursor = con.cursor()
+        print("hello")
+        # Query the data from roadmap table
+        cursor.execute("SELECT competency_code, competency_name, skill_code, skill_name, duration FROM roadmap")
+        rows = cursor.fetchall()
+        
+        # Clear the current data in the table
+        for item in table.get_children():
+            table.delete(item)
+        
+        # Insert each row of data into the table
+        for row in rows:
+            table.insert('', 'end', values=row)
+        
+        con.close()
 
        
 # Page to show undated
