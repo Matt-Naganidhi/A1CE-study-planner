@@ -13,10 +13,13 @@ def init_database(inputfile):
     cursor = con.cursor()
 
     # Read the CSV file into a DataFrame with specified encoding
-    df = pd.read_csv(inputfile, encoding='ISO-8859-1')  # Change encoding as necessary
+    df = pd.read_csv(inputfile)  # Change encoding as necessary
 
     # Strip whitespace from column names
     df.columns = df.columns.str.strip()
+    
+    df.columns = ['competency_code', 'competency_name', 'skill_code', 'skill_name']  # Example of renaming
+
     
     # Debug print to check the DataFrame columns
     print("Columns in DataFrame:", df.columns.tolist())
@@ -27,7 +30,8 @@ def init_database(inputfile):
         competency_code TEXT,
         competency_name TEXT,
         skill_code TEXT,
-        skill_name TEXT
+        skill_name TEXT,
+        duration TEXT
     )
     ''')
 
@@ -41,6 +45,8 @@ def init_database(inputfile):
         except KeyError as e:
             print(f"KeyError: {e} - Check if the column names in the CSV match the expected names.")
 
+    cursor.execute('''UPDATE roadmap 
+                   SET competency_code = RTRIM(competency_code)''')
     # Commit the transaction to save changes
     con.commit()
 
