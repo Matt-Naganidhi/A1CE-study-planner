@@ -100,39 +100,50 @@ def add_task():
 
 def modify_task():
     #connect to the database
-    con = sqlite3.connect('tasks.db')
-    cursor = con.cursor()
+    roadmap_con = sqlite3.connect('roadmap.db')
+    roadmap_cursor = roadmap_con.cursor()
    
-    #get input to modify
-    task_id, new_competency_name, new_skill_code, new_skill_name = user_input()
 
-    #check if competency exists in the database
-    cursor.execute("SELECT * FROM tasks WHERE task_id = ?", (task_id,))
-    row = cursor.fetchone()
+    #get skill code and check if competency exists in the database
+    skill_code = input("Enter the task to modify (skill_code): ")
+    roadmap_cursor.execute("SELECT * FROM roadmap WHERE skill_code = ?", (skill_code,))
+    task = roadmap_cursor.fetchone()
     
-    if row is None:
-        #print error and exit if not found
-        print(f"Task with task_id {task_id} not found.")
-        con.close()
+    if not task:
+        print(f"Task with skill code {skill_code} not found.")
+        roadmap_con.close()
         return
+    
+    #get new task date
+    new_start_date = input("Enter new start date (YYYY-MM-DD) or leave blank to keep unchanged: ")
+    new_end_date = input("Enter new end date (YYYY-MM-DD) or leave blank to keep unchanged: ")
 
-    #modify the details and update only on provided input.
-    if new_competency_name:
-        cursor.execute("UPDATE tasks SET competency_name = ? WHERE task_id = ?", 
-                       (new_competency_name, task_id))
-    if new_skill_code:
-        cursor.execute("UPDATE tasks SET skill_code = ? WHERE task_id = ?", 
-                       (new_skill_code, task_id))
-    if new_skill_name:
-        cursor.execute("UPDATE tasks SET skill_name = ? WHERE task_id = ?", 
-                       (new_skill_name, task_id))
+    updates = []
+    params = []
 
-    con.commit()
-    print(f"Task with task_id {task_id} has been successfully modified.")
+    if new_start_date:
+        updates.append("start_date = ?")
+        params.append(new_start_date)
 
-    # Close the database connection
-    con.close()
+    if new_end_date:
+        updates.append("end_date = ?")
+        params.append(new_end_date)
+        #calculate new duration if both dates are updated
+        if new_start_date:
+            start_date_obj = datetime.strptime(new_start_date, "%Y-%m-%d")
+            end_date_obj = datetime.strptime(new_end_date, "%Y-%m-%d")
+            new_duration = (end_date_obj - start_date_obj).days
+            updates.append("duration = ?")
+            params.append(new_duration)
+    
+    if updates:
+        params.append(skill_code)
+        roadmap_cursor.execute(f"UPDATE roadmap SET {', '.join(updates)} WHERE skill_code = ?", params)
+        roadmap_con.commit()
+        print(f"Task with skill code {skill_code} has been successfully modified.")
 
+    roadmap_con.close()
+    
 def delete_task():
     con = sqlite3.connect('tasks.db')
     cursor = con.cursor()
