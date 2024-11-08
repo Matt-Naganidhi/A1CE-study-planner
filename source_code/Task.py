@@ -11,15 +11,19 @@ def add_task():
     roadmap_con = sqlite3.connect('roadmap.db')
     roadmap_cursor = roadmap_con.cursor()
 
-    roadmap_cursor.execute("SELECT competency_code, title FROM roadmap")
+    roadmap_cursor.execute("PRAGMA table_info(roadmap)")
+    columns = [info[1] for info in roadmap_cursor.fetchall()]
+    if 'duration' not in columns:
+        roadmap_cursor.execute("ALTER TABLE roadmap ADD COLUMN duration INTEGER")
+
+    roadmap_cursor.execute("SELECT DISTINCT competency_code, competency_name FROM roadmap")
     competencies = roadmap_cursor.fetchall()
-
     print("Available competencies:")
-    for comp_code, title, skill_code in competencies:
-        print(f"{comp_code}: {title}, Skill code: {skill_code}")
+    for comp_code, comp_name in competencies:
+        print(f"{comp_code}: {comp_name}")
 
-    selected_competency = input("Enter the competency code for the new task: ")
-    roadmap_cursor.execute("SELECT comtency_code, title, assesed_skill_code FROM roadmap WHERE competency_code = ?", (selected_competency,))
+    selected_competency  = input("Enter the competency code for the new task: ")
+    roadmap_cursor.execute("SELECT competency_code, competency_name FROM roadmap WHERE competency_code = ?", (selected_competency,))
     competency = roadmap_cursor.fetchone()
 
     if not competency:
@@ -27,31 +31,23 @@ def add_task():
         roadmap_con.close()
         return
     
-    task_id = competency[0]
-    competency_name = competency[1]
-    skill_code = competency[2]
     skill_name = input("Enter skill name for the task: ")
     start_date = input("Enter start date (YYYY-MM-DD): ")
     end_date = input("Enter end date (YYYY-MM-DD): ")
 
     #calculate task duration
     start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
-    end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+    end_date_obj = datetime.strptime(end_date, "%Y-%m-  %d")
     task_duration = (end_date_obj - start_date_obj).days
 
-    tasks_con = sqlite3.connect('tasks.db')
-    tasks_cursor = tasks_con.cursor()
-
-    tasks_cursor.execute(
-        "INSERT INTO tasks (task_id, competency_name, skill_code, skill_name, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?)",
-        (task_id, competency_name, skill_code, skill_name, start_date, end_date, task_duration)
+    roadmap_cursor.execute(
+        "INSERT INTO roadmap (competency_code, competency_name, skill_name, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?)",
+        (competency[0], competency[1], skill_name, start_date, end_date, task_duration)
     )
-    
-    tasks_con.commit()
-    print("New task has been added to tasks.db with a duration of", task_duration, "days.")
+    roadmap_con.commit()
+    print("New task has been added to roadmap.db with a duration of", task_duration, "days.")
 
     roadmap_con.close()
-    tasks_con.close()
 
 
 #def task_info (roadmap_information, current_device_date, user_input_array):
