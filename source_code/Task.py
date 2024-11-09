@@ -143,7 +143,7 @@ def modify_task():
         print(f"Task with skill code {skill_code} has been successfully modified.")
 
     roadmap_con.close()
-    
+
 def delete_task():
     roadmap_con = sqlite3.connect('roadmap.db')
     roadmap_cursor = roadmap_con.cursor()
@@ -152,7 +152,7 @@ def delete_task():
     skill_code = input("Enter the skill code you want to delete:")
 
     #check and confirm deletion
-    roadmap_cursor.execute("SELECT * FROM tasks WHERE skill_code = ?", skill_code,))
+    roadmap_cursor.execute("SELECT * FROM tasks WHERE skill_code = ?", skill_code,)
     task = roadmap_cursor.fetchone()
 
     if not task:
