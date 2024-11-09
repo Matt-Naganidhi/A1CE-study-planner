@@ -145,44 +145,43 @@ def modify_task():
     roadmap_con.close()
     
 def delete_task():
-    con = sqlite3.connect('tasks.db')
-    cursor = con.cursor()
+    roadmap_con = sqlite3.connect('roadmap.db')
+    roadmap_cursor = roadmap_con.cursor()
 
-    #get id
-    task_id = input("Enter the Task ID you want to delete (task_id):")
+    #get skill code
+    skill_code = input("Enter the skill code you want to delete:")
 
-    #check task
-    cursor.execute("SELECT * FROM tasks WHERE task_id = ?", (task_id,))
-    row = cursor.fetchone()
+    #check and confirm deletion
+    roadmap_cursor.execute("SELECT * FROM tasks WHERE skill_code = ?", skill_code,))
+    task = roadmap_cursor.fetchone()
 
-    if row is None:
-        print(f"Task with task_id {task_id} not found.")
-        con.close()
+    if not task:
+        print(f"Task with skill code {skill_code} not found.")
+        roadmap_con.close()
         return
-
-    #confirm the deletion
-    confirm = input(f"Are you sure you want to delete the task with task_id {task_id}? (yes/no): ")
+    
+    confirm = input(f"Are you sure you want to delete the task with skill_code {skill_code}? (yes/no): ")
     if confirm.lower() != 'yes':
         print("Deletion canceled.")
-        con.close()
+        roadmap_con.close()
         return
 
     #delete task
-    cursor.execute("DELETE FROM tasks WHERE compe = ?", (task_id,))
-    con.commit()
+    roadmap_cursor.execute("DELETE FROM roadmap WHERE skill_code = ?", (skill_code,))
+    roadmap_con.commit()
 
-    print(f"Task with competency_code {task_id} has been successfully deleted.")
+    print(f"Task with skill code {skill_code} has been successfully deleted.")
 
     con.close()
     
 #get task id, new competency name, skill code, skill name
-def user_input():
-    task_id = input("Enter the Task ID you want to modify (task_id): ") 
-    new_competency_name = input("Enter new competency name (leave blank to keep unchanged): ")  
-    new_skill_code = input("Enter new skill code (leave blank to keep unchanged): ") 
-    new_skill_name = input("Enter new skill name (leave blank to keep unchanged): ") 
+#def user_input():
+   # task_id = input("Enter the Task ID you want to modify (task_id): ") 
+  #  new_competency_name = input("Enter new competency name (leave blank to keep unchanged): ")  
+  #  new_skill_code = input("Enter new skill code (leave blank to keep unchanged): ") 
+  #  new_skill_name = input("Enter new skill name (leave blank to keep unchanged): ") 
     
-    return task_id, new_competency_name, new_skill_code, new_skill_name
+  #  return task_id, new_competency_name, new_skill_code, new_skill_name
 
     
     
