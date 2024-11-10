@@ -114,17 +114,20 @@ def modify_task():
         roadmap_con.close()
         return
     
-    #get new task date
+    #get new task detail
+    new_skill_name = input("Enter new skill name (leave black to keep unchanged): ")
     new_start_date = input("Enter new start date (YYYY-MM-DD) or leave blank to keep unchanged: ")
     new_end_date = input("Enter new end date (YYYY-MM-DD) or leave blank to keep unchanged: ")
 
     updates = []
     params = []
 
+    if new_skill_name:
+        updates.append("skill_name = ?")
+        params.append(new_skill_name)
     if new_start_date:
         updates.append("start_date = ?")
         params.append(new_start_date)
-
     if new_end_date:
         updates.append("end_date = ?")
         params.append(new_end_date)
