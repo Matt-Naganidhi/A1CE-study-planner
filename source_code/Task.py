@@ -30,7 +30,8 @@ def add_task():
         print(f"No competency found with code {selected_competency}.")
         roadmap_con.close()
         return
-    
+
+    skill_code = input("Enter a unique skill code for the new task: ")
     skill_name = input("Enter skill name for the task: ")
     start_date = input("Enter start date (YYYY-MM-DD): ")
     end_date = input("Enter end date (YYYY-MM-DD): ")
