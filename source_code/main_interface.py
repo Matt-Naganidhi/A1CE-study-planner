@@ -246,7 +246,9 @@ class Planner(tk.Frame):
         cursor = con.cursor()
         print("hello")
         # Query the data from roadmap table
-        cursor.execute("SELECT competency_code, competency_name, skill_code, skill_name, duration FROM roadmap")
+        cursor.execute("""SELECT competency_code, competency_name, skill_code, skill_name, duration 
+                       FROM roadmap
+                       WHERE duration is NOT NULL """)
         rows = cursor.fetchall()
         
         # Clear the current data in the table
@@ -329,67 +331,84 @@ class Undated(tk.Frame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # Menu frame that contain button to go to all pages
+        # Menu frame containing buttons to navigate
         menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
         menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
         menu_frame.rowconfigure((0, 1, 2), weight=1)
 
         to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
-                                   font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
+                            font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
         to_main.grid(row=0, column=0, padx=10, pady=10)
 
         to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, fg="white", bg="black",
-                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
         to_planner.grid(row=1, column=0, padx=10, pady=10)
 
         to_undated = tk.Button(menu_frame, text="Undated", width=20, height=5, 
-                                fg="white", bg="black",
-                               font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
+                               fg="white", bg="black", font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
         to_undated.grid(row=2, column=0, padx=10, pady=10)
-
-        # Function frame that contain all the function of the page
+        
+        # Function frame that contains all the functionalities
         function_frame = tk.LabelFrame(self, bg="#333e61", fg='white', bd=1)
         function_frame.place(relx=0.15, y=0, relwidth=0.85, relheight=1)
         function_frame.columnconfigure(0, weight=1)
         function_frame.rowconfigure((0, 1, 2, 3), weight=1)
 
         # Label at the top of the page
-        label = tk.Label(function_frame, text="Undated", font=BIGFONT, bg ="#333e61", fg="white")
+        label = tk.Label(function_frame, text="Undated", font=BIGFONT, bg="#333e61", fg="white")
         label.grid(row=0, column=0, pady=10, padx=10)
 
         # Table for data display
-        table = ttk.Treeview(function_frame, columns=("comp_id", "comp_name", "skill_code", "skill_name", "duration"), show="headings")
-        table.column("comp_id", width=10)
-        table.column("comp_name", width=100)
-        table.column("skill_code", width=10)
-        table.column("skill_name", width=50)
-        table.column("duration", width=10)
+        self.table = ttk.Treeview(function_frame, columns=("comp_id", "comp_name", "skill_code", "skill_name", "duration"), show="headings")
+        self.table.column("comp_id", width=10)
+        self.table.column("comp_name", width=100)
+        self.table.column("skill_code", width=10)
+        self.table.column("skill_name", width=50)
+        self.table.column("duration", width=10)
 
-        table.heading('comp_id', text="Competency Code")
-        table.heading('comp_name', text="Competency Name")
-        table.heading('skill_code', text="Skill Code")
-        table.heading('skill_name', text="Skill Name")
-        table.heading('duration', text="Duration")
-        table.grid(row=1, column=0, sticky="nsew", padx=20)
-        table.insert(parent='', index=0, values=("AIC-401", " Information Retrieval, Extraction, Search and Indexing "
-                                                 , " AIC-401:00030", " Understand ranking algorithms", "2 days"))
+        self.table.heading('comp_id', text="Competency Code")
+        self.table.heading('comp_name', text="Competency Name")
+        self.table.heading('skill_code', text="Skill Code")
+        self.table.heading('skill_name', text="Skill Name")
+        self.table.heading('duration', text="Duration")
+        self.table.grid(row=1, column=0, sticky="nsew", padx=20)
 
-        # scroll bar
-        scroll = tk.Scrollbar(function_frame, orient='vertical', command=table.yview, bg='red')
-        table.configure(yscrollcommand=scroll.set)
+        # Scroll bar
+        scroll = tk.Scrollbar(function_frame, orient='vertical', command=self.table.yview, bg='red')
+        self.table.configure(yscrollcommand=scroll.set)
         scroll.grid(row=1, column=0, sticky="nse")
 
-
-        toplanner = tk.Button(function_frame, text="back to planner", width=20, height=2,
-                             font=DEFAULTFONT,
-                             command=lambda: controller.show_frame(Planner))
+        toplanner = tk.Button(function_frame, text="Back to planner", width=20, height=2,
+                              font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
         toplanner.grid(row=3, column=0, sticky="w", padx=20, pady=40)
 
-        tomain = tk.Button(function_frame, text="back to main", width=20, height=2,
-                                        font=DEFAULTFONT,
-                              command=lambda: controller.show_frame(MainPage))
+        tomain = tk.Button(function_frame, text="Back to main", width=20, height=2,
+                           font=DEFAULTFONT, command=lambda: self.init_planner(self.table))
         tomain.grid(row=3, column=0, sticky="e", padx=20, pady=40)
+
+    def init_planner(self, table):
+        # Connect to the SQLite database and fetch data
+        con = sqlite3.connect('roadmap.db')
+        cursor = con.cursor()
+        
+        # Query the data from roadmap table where duration is NULL or empty
+        cursor.execute("""
+            SELECT competency_code, competency_name, skill_code, skill_name, duration 
+            FROM roadmap
+            WHERE duration IS NULL
+        """)
+        rows = cursor.fetchall()
+        
+        # Clear the current data in the table
+        for item in table.get_children():
+            table.delete(item)
+        
+        # Insert each row of data into the table
+        for row in rows:
+            table.insert('', 'end', values=row)
+        
+        con.close()
 
 
 
