@@ -16,8 +16,9 @@ import pandas as pd
 from tkinter import ttk  # extra function from the graphic library
 from tkinter import filedialog, messagebox  # for importing file
 
-from database import init_database, read_roadmap_data
-import Task
+from database import *
+from Task import *
+
 
 DEFAULTFONT = ("Helvetica", 12, "bold")  # define default font
 BIGFONT = ("Helvetica", 24, "bold")  # define big font
@@ -135,7 +136,37 @@ class MainPage(tk.Frame):
         print(filepath)
         check = init_database(filepath)
         if not check:
-            print("Cancel Import")
+            print("Roadmap file already exist")
+            self.fail_msg()
+        else:
+            self.success_msg()
+
+    def success_msg(self):
+        popup = tk.Toplevel(self)  # Use Toplevel to create a popup window
+        popup.wm_title("Message")
+        popup.after(1, lambda: popup.focus_force())
+        
+        label = tk.Label(popup, text="Open file successfully!", font=DEFAULTFONT)
+        label.pack(pady=10)
+        label2 = tk.Label(popup, text="Go to planner to look at your tasks!", font=DEFAULTFONT)
+        label2.pack(pady=10)
+        
+        ok_button = ttk.Button(popup, text="Okay", command=popup.destroy)
+        ok_button.pack(pady=10)
+
+    def fail_msg(self):
+        popup = tk.Toplevel(self)  # Use Toplevel to create a popup window
+        popup.wm_title("Message")
+        popup.after(1, lambda: popup.focus_force())
+
+        
+        label = tk.Label(popup, text="Roadmap file alredy initiated!", font=DEFAULTFONT)
+        label.pack(pady=10)
+        
+        ok_button = ttk.Button(popup, text="Okay", command=popup.destroy)
+        ok_button.pack(pady=10)
+    
+    
 
         
 # Planner page
@@ -191,23 +222,22 @@ class Planner(tk.Frame):
         table.grid(row=1, column=0, sticky="nsew", padx=20)
 
 
+        table.bind("<Double-1>", lambda event: self.on_row_click(table))
 
         # scroll bar
         scroll = tk.Scrollbar(function_frame, orient='vertical', command=table.yview, bg='red')
         table.configure(yscrollcommand=scroll.set)
         scroll.grid(row=1, column=0, sticky="nse")
  
-                 
-        
 
-        main = tk.Button(function_frame, text="initiate page", width=20, height=2,
+        main = tk.Button(function_frame, text="Reset Table", width=20, height=2,
                              font=DEFAULTFONT,
                              command=lambda: self.init_planner(table))
         main.grid(row=3, column=0, sticky="w", padx=20, pady=40)
 
         lastpage = tk.Button(function_frame, text="next", width=20, height=2,
                                         font=DEFAULTFONT,
-                              command=lambda: controller.show_frame(Undated))
+                              command=lambda: self.popupmsg())
         lastpage.grid(row=3, column=0, sticky="e", padx=20, pady=40)
 
     def init_planner(self, table):
@@ -228,6 +258,66 @@ class Planner(tk.Frame):
             table.insert('', 'end', values=row)
         
         con.close()
+
+    def on_row_click(self, table):
+        # Get the item that was clicked
+        selected_item = table.selection()
+        if selected_item:
+        # Fetch the values of the selected row
+            row_values = table.item(selected_item, "values")
+            com_code, com_name, skill_code, skill_name, duration = row_values
+            # com_code = row_values[0].strip()
+            # com_name = row_values[1].strip()
+            # skill_code = row_values[2].strip()
+            # skill_name = row_values[3].strip()
+            # duration = row_values[4].strip()
+     
+        print(com_code, com_name, skill_code, skill_name, duration)
+        self.popupmsg(com_code, com_name, skill_code, skill_name)    
+
+    def popupmsg(self, com_code, com_name, skill_code, skill_name):
+        popup = tk.Tk()
+        popup.wm_title("Edit Page")
+        popup.after(1, lambda: popup.focus_force())
+    
+        # Label indicating the editing section
+        label = tk.Label(popup, text=f"Editing:  {com_code} : {com_name}" , font=DEFAULTFONT)
+        label.pack(pady=10, padx =80)
+
+        # Entry fields for each value with initial text set to existing values
+        # entry1 = tk.Entry(popup, width=40)
+        # entry1.insert(0, com_code)  # Insert initial value for Competency Code
+        # entry1.pack(pady=5)
+        label1 = tk.Label(popup, text=f"{skill_code}")
+        label1.pack(pady=10, padx =80)
+
+        # entry2 = tk.Entry(popup, width=40)
+        # entry2.insert(0, com_name)
+        # entry2.pack(pady=5)
+
+        entry3 = tk.Entry(popup, width=40)
+        entry3.insert(0, skill_code) 
+        entry3.pack(pady=5)
+
+        entry4 = tk.Entry(popup, width=40)
+        entry4.insert(0, skill_name)
+        entry4.pack(pady=5)
+
+        label3 = tk.Label(popup, text="Editing End Date(YYYY-MM-DD)")
+        label3.pack(pady=10, padx =10)
+
+        entry5 = tk.Entry(popup, width=40)
+        entry5.insert(0, "YYYY-MM-DD")
+        entry5.pack(pady=5)
+
+    # Buttons
+        save_button = tk.Button(popup, text="Save", width=30, command =lambda: modify_task(skill_code, entry4.get(), entry5.get()))
+        save_button.pack(side="right", padx=10, pady=20)
+
+        cancel_button = tk.Button(popup, text="Cancel", width=30, command=popup.destroy)
+        cancel_button.pack(side="left", padx=10, pady=20)
+
+        popup.mainloop()
 
        
 # Page to show undated
