@@ -2,6 +2,7 @@
 # Input is the CSV that is converted from 'read-data.py'
 
 # Created by Supakorn Etitum (JackJack) on 23 October 2024
+# Modified by Gold, 8 November 2024
 
 import sqlite3
 import pandas as pd
@@ -11,6 +12,19 @@ def init_database(inputfile):
     con = sqlite3.connect('roadmap.db')
     # Create a cursor to execute commands on the database
     cursor = con.cursor()
+    
+    
+    # Check if there are any tables in the database
+    cursor.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='roadmap';")
+    result = cursor.fetchone()[0]  # Fetch the count of tables with the name 'roadmap'
+
+
+    if result > 0:
+        print("Roadmap already imported.")
+        con.close()
+        return 0
+    
+    
 
     # Read the CSV file into a DataFrame with specified encoding
     df = pd.read_csv(inputfile)  # Change encoding as necessary
@@ -22,7 +36,7 @@ def init_database(inputfile):
 
     
     # Debug print to check the DataFrame columns
-    print("Columns in DataFrame:", df.columns.tolist())
+    # print("Columns in DataFrame:", df.columns.tolist())
 
     # Create the table (if it doesn't exist already)
     cursor.execute('''
@@ -53,6 +67,8 @@ def init_database(inputfile):
     # Close the connection
     con.close()
 
+    return 1
+
 def read_roadmap_data():
     con = sqlite3.connect('roadmap.db')
     # Read the data from the roadmap table into a DataFrame
@@ -64,9 +80,11 @@ def read_roadmap_data():
     # Close the connection
     con.close()
 
+   
+
 if __name__ == "__main__":
-    # Ensure to provide the correct path to the CSV file
+     # Ensure to provide the correct path to the CSV file
     init_database('/Users/jayj/A1CE-study-planner/source_code/data-management/output.csv')  # Change this to your actual CSV file path
     
-    # Call read function to display the tasks
+#     # Call read function to display the tasks
     read_roadmap_data()
