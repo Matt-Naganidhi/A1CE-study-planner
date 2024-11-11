@@ -8,66 +8,69 @@ import pandas as pd
 import sqlite3
 from datetime import datetime
 
-def add_task():
-    roadmap_con = sqlite3.connect('roadmap.db')
-    roadmap_cursor = roadmap_con.cursor()
+def add_task(competency_code, competency_name, skill_name, end_date):
+    try:
+        # Set start date to today
+        start_date = datetime.now().strftime("%Y-%m-%d")
+        
+        # Calculate the duration
+        end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
+        start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
+        duration = (end_date_obj - start_date_obj).days
 
-    roadmap_cursor.execute("PRAGMA table_info(roadmap)")
-    columns = [info[1] for info in roadmap_cursor.fetchall()]
-    if 'duration' not in columns:
-        roadmap_cursor.execute("ALTER TABLE roadmap ADD COLUMN duration INTEGER")
+        # Connect to the database
+        con = sqlite3.connect('roadmap.db')
+        cursor = con.cursor()
 
-    roadmap_cursor.execute("SELECT DISTINCT competency_code, competency_name FROM roadmap")
-    competencies = roadmap_cursor.fetchall()
-    print("Available competencies:")
-    for comp_code, comp_name in competencies:
-        print(f"{comp_code}: {comp_name}")
+        # Check if competency already exists; if not, add it
+        cursor.execute("SELECT competency_code FROM roadmap WHERE competency_code = ?", (competency_code,))
+        if not cursor.fetchone():
+            cursor.execute(
+                "INSERT INTO roadmap (competency_code, competency_name) VALUES (?, ?)",
+                (competency_code, competency_name)
+            )
 
-    selected_competency  = input("Enter the competency code for the new task: ")
-    roadmap_cursor.execute("SELECT competency_code, competency_name FROM roadmap WHERE competency_code = ?", (selected_competency,))
-    competency = roadmap_cursor.fetchone()
+        # Insert the new task with the start date and duration
+        cursor.execute(
+            "INSERT INTO roadmap (competency_code, competency_name, skill_name, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?)",
+            (competency_code, competency_name, skill_name, start_date, end_date, duration)
+        )
+        con.commit()
+        con.close()
 
-    if not competency:
-        print(f"No competency found with code {selected_competency}.")
-        roadmap_con.close()
-        return
-    
-    skill_name = input("Enter skill name for the task: ")
-    start_date = input("Enter start date (YYYY-MM-DD): ")
-    end_date = input("Enter end date (YYYY-MM-DD): ")
-
-    #calculate task duration
-    start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
-    end_date_obj = datetime.strptime(end_date, "%Y-%m-  %d")
-    task_duration = (end_date_obj - start_date_obj).days
-
-    roadmap_cursor.execute(
-        "INSERT INTO roadmap (competency_code, competency_name, skill_name, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?)",
-        (competency[0], competency[1], skill_name, start_date, end_date, task_duration)
-    )
-    roadmap_con.commit()
-    print("New task has been added to roadmap.db with a duration of", task_duration, "days.")
-
-    roadmap_con.close()
+        return f"New task added successfully with a duration of {duration} days."
+    except Exception as e:
+        return f"Error: {str(e)}"
         
 
-def modify_task(skill_code, new_skill_name, end_date):
-    #connect to the database
+def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callback=None):
+    # Connect to the database
     roadmap_con = sqlite3.connect('roadmap.db')
     roadmap_cursor = roadmap_con.cursor()
 
     roadmap_cursor.execute("SELECT * FROM roadmap WHERE skill_code = ?", (skill_code,))
     task = roadmap_cursor.fetchone()
     if not task:
-        print(f"Task with skill code {skill_code} not found.")
+        error_msg = f"Task with skill code {skill_code} not found."
+        print(error_msg)
+        if msg_callback:
+            msg_callback(error_msg)
         roadmap_con.close()
         return
    
-
     date_format = "%Y-%m-%d"
-
+    new_end_date = ""
     new_start_date = datetime.now()
-    new_end_date = datetime.strptime(end_date, date_format)
+    if end_date != "YYYY-MM-DD":
+        try:
+            new_end_date = datetime.strptime(end_date, date_format)
+        except ValueError:
+            error_msg = "Invalid date format. Please use YYYY-MM-DD."
+            print(error_msg)
+            if msg_callback:
+                msg_callback(error_msg)
+            roadmap_con.close()
+            return
 
     updates = []
     params = []
@@ -76,16 +79,16 @@ def modify_task(skill_code, new_skill_name, end_date):
         updates.append("skill_name = ?")
         params.append(new_skill_name)
 
+    if new_skill_code:
+        updates.append("skill_code = ?")
+        params.append(new_skill_code)
 
-        #calculate new duration if both dates are updated
+    # Calculate new duration
     if new_end_date:
-    
         new_duration = (new_end_date - new_start_date).days
-        print(new_duration)
         updates.append("duration = ?")
         params.append(new_duration)
         
-    
     if updates:
         params.append(skill_code)
         query = f"UPDATE roadmap SET {', '.join(updates)} WHERE skill_code = ?"
@@ -95,12 +98,22 @@ def modify_task(skill_code, new_skill_name, end_date):
         try:
             roadmap_cursor.execute(query, params)
             roadmap_con.commit()
-            print(f"Task with skill code {skill_code} has been successfully modified.")
-
+            success_msg = f"Task with skill code {skill_code} has been successfully modified."
+            print(success_msg)
+            if msg_callback:
+                msg_callback(success_msg)
         except sqlite3.Error as e:
-            print(f"An error occurred: {e}")
+            error_msg = f"An error occurred: {e}"
+            print(error_msg)
+            if msg_callback:
+                msg_callback(error_msg)
     else:
-        print("No updates to apply.")
+        no_update_msg = "No updates to apply."
+        print(no_update_msg)
+        if msg_callback:
+            msg_callback(no_update_msg)
+
+    roadmap_con.close()
 
 def delete_task():
     roadmap_con = sqlite3.connect('roadmap.db')
