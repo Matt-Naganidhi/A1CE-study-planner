@@ -79,6 +79,20 @@ def read_roadmap_data():
     
     # Close the connection
     con.close()
+    
+def clear_roadmap():
+    con = sqlite3.connect('roadmap.db')
+    
+    cursor = con.cursor()
+    
+    cursor.execute('DELETE FROM roadmap')
+    
+    con.commit()
+    
+    con.close()
+    
+    
+    
 
    
 
@@ -88,3 +102,5 @@ if __name__ == "__main__":
     
 #     # Call read function to display the tasks
     read_roadmap_data()
+    
+    clear_roadmap()

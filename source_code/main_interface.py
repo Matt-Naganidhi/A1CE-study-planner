@@ -409,7 +409,7 @@ class Undated(tk.Frame):
             table.insert('', 'end', values=row)
         
         con.close()
-
+    
 
 
 # Run the application
