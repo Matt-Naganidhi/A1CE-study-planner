@@ -1,14 +1,14 @@
 # This source file is made to add, modfiy, and delete tasks
 # inputs device date data, roadmap data
 # Author Im and Matt
-# Modified by Gold, 10 November 2024
+# Modified by Gold, 13 November 2024
 import os
 import csv
 import pandas as pd
 import sqlite3
 from datetime import datetime
 
-def add_task(competency_code, competency_name, skill_name, end_date):
+def add_task(competency_code, competency_name, skill_code, skill_name, end_date):
     try:
         # Set start date to today
         start_date = datetime.now().strftime("%Y-%m-%d")
@@ -17,23 +17,16 @@ def add_task(competency_code, competency_name, skill_name, end_date):
         end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
         start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
         duration = (end_date_obj - start_date_obj).days
+        print(duration)
 
         # Connect to the database
         con = sqlite3.connect('roadmap.db')
         cursor = con.cursor()
 
-        # Check if competency already exists; if not, add it
-        cursor.execute("SELECT competency_code FROM roadmap WHERE competency_code = ?", (competency_code,))
-        if not cursor.fetchone():
-            cursor.execute(
-                "INSERT INTO roadmap (competency_code, competency_name) VALUES (?, ?)",
-                (competency_code, competency_name)
-            )
-
         # Insert the new task with the start date and duration
         cursor.execute(
-            "INSERT INTO roadmap (competency_code, competency_name, skill_name, start_date, end_date, duration) VALUES (?, ?, ?, ?, ?, ?)",
-            (competency_code, competency_name, skill_name, start_date, end_date, duration)
+            "INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name, duration) VALUES (?, ?, ?, ?, ?)",
+            (competency_code, competency_name, skill_code, skill_name, duration)
         )
         con.commit()
         con.close()
@@ -41,6 +34,8 @@ def add_task(competency_code, competency_name, skill_name, end_date):
         return f"New task added successfully with a duration of {duration} days."
     except Exception as e:
         return f"Error: {str(e)}"
+    
+
         
 
 def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callback=None):
@@ -115,33 +110,30 @@ def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callba
 
     roadmap_con.close()
 
-def delete_task():
-    roadmap_con = sqlite3.connect('roadmap.db')
-    roadmap_cursor = roadmap_con.cursor()
+def delete_task(skill_code):
 
-    #get skill code
-    skill_code = input("Enter the skill code you want to delete:")
-
-    #check and confirm deletion
-    roadmap_cursor.execute("SELECT * FROM tasks WHERE skill_code = ?", skill_code,)
-    task = roadmap_cursor.fetchone()
-
-    if not task:
-        print(f"Task with skill code {skill_code} not found.")
+    try:
+        roadmap_con = sqlite3.connect('roadmap.db')
+        roadmap_cursor = roadmap_con.cursor()
+        
+        # Execute the delete operation
+        roadmap_cursor.execute("DELETE FROM roadmap WHERE skill_code = ?", (skill_code,))
+        
+        # Check if the row was deleted
+        if roadmap_cursor.rowcount == 0:
+            print(f"No task with skill code {skill_code} found.")
+        else:
+            print(f"Task with skill code {skill_code} has been successfully deleted.")
+            
+        roadmap_con.commit()
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+    finally:
         roadmap_con.close()
-        return
     
-    confirm = input(f"Are you sure you want to delete the task with skill_code {skill_code}? (yes/no): ")
-    if confirm.lower() != 'yes':
-        print("Deletion canceled.")
-        roadmap_con.close()
-        return
 
-    #delete task
-    roadmap_cursor.execute("DELETE FROM roadmap WHERE skill_code = ?", (skill_code,))
-    roadmap_con.commit()
 
-    print(f"Task with skill code {skill_code} has been successfully deleted.")
-
-    roadmap_con.close()
+    
+    
+    
     
