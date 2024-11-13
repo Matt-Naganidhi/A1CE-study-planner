@@ -92,9 +92,7 @@ def clear_roadmap():
     con.close()
     
     
-    
 
-   
 
 if __name__ == "__main__":
      # Ensure to provide the correct path to the CSV file
