@@ -43,7 +43,7 @@ class MainApp(tk.Tk):
         self.pages = {}
 
         # Initialize pages
-        for Page in (MainPage, Planner, Undated):
+        for Page in (MainPage, Planner, Undated, Finished):
             page = Page(container, self)
             self.pages[Page] = page
             page.grid(row=0, column=0, sticky="nsew")
@@ -86,23 +86,25 @@ class MainPage(tk.Frame):
         menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
         menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
-        menu_frame.rowconfigure((0, 1, 2), weight=1)
+        menu_frame.rowconfigure((0, 1, 2, 3), weight=1)
 
-        to_main = tk.Button(menu_frame, text="Main", width=20, height=5, 
-                                fg="white", bg="black",
-                                font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
+        to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
+                                   font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
         to_main.grid(row=0, column=0, padx=10, pady=10)
 
-        # add initiate table function to this button
-        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, 
-                                fg="white", bg="black",
-                                font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
+        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, fg="white", bg="black",
+                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
         to_planner.grid(row=1, column=0, padx=10, pady=10)
 
         to_undated = tk.Button(menu_frame, text="Undated", width=20, height=5, 
                                 fg="white", bg="black",
-                                font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
         to_undated.grid(row=2, column=0, padx=10, pady=10)
+
+        to_finish = tk.Button(menu_frame, text="Completed", width=20, height=5, 
+                                fg="white", bg="black",
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Finished))
+        to_finish.grid(row=3, column=0, padx=10, pady=10)
 
         # Function frame that contain all the function of the page
         function_frame = tk.LabelFrame(self, bg="#2d3960", fg='white', bd=1)
@@ -168,11 +170,10 @@ class Planner(tk.Frame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # Menu frame that contain button to go to all pages
         menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
         menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
-        menu_frame.rowconfigure((0, 1, 2), weight=1)
+        menu_frame.rowconfigure((0, 1, 2, 3), weight=1)
 
         to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
                                    font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
@@ -186,6 +187,11 @@ class Planner(tk.Frame):
                                 fg="white", bg="black",
                                font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
         to_undated.grid(row=2, column=0, padx=10, pady=10)
+
+        to_finish = tk.Button(menu_frame, text="Completed", width=20, height=5, 
+                                fg="white", bg="black",
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Finished))
+        to_finish.grid(row=3, column=0, padx=10, pady=10)
 
         # Function frame that contain all the function of the page
         function_frame = tk.LabelFrame(self, bg="#2d3960", fg='white', bd=1)
@@ -236,9 +242,30 @@ class Planner(tk.Frame):
         # Connect to the SQLite database and fetch data
         con = sqlite3.connect('roadmap.db')
         cursor = con.cursor()
+
+        # Get the current date
+        current_date = datetime.now().date()
+    
+    # Update duration based on the difference between end_date and the current date
+        cursor.execute("SELECT skill_code, end_date FROM roadmap")
+        rows = cursor.fetchall()
+    
+        for skill_code, end_date in rows:
+            if end_date:
+            # Parse the end_date and calculate the difference
+                end_date_obj = datetime.strptime(end_date.split()[0], "%Y-%m-%d").date()
+                duration = (end_date_obj - current_date).days
+                cursor.execute("UPDATE roadmap SET duration = ? WHERE skill_code = ?", (duration, skill_code))
+    
+    # Commit the updates to the database
+        con.commit()
         
         # Query the data from roadmap table
-        cursor.execute("SELECT competency_code, competency_name, skill_code, skill_name, duration FROM roadmap")
+        cursor.execute("""
+        SELECT competency_code, competency_name, skill_code, skill_name, duration
+        FROM roadmap
+        ORDER BY duration IS NULL, duration ASC
+        """)
         rows = cursor.fetchall()
         
         # Clear the current data in the table
@@ -365,21 +392,23 @@ class Planner(tk.Frame):
         # Label indicating the editing section
         label = tk.Label(self.edit_window, text=f"Editing:  {com_code} : {com_name}", font=DEFAULTFONT)
         label.pack(pady=10, padx=80)
+        
+
 
         # Skill code entry
-        label2 = tk.Label(self.edit_window, text="Editing Skill Code").pack(padx=10)
+        label2 = tk.Label(self.edit_window, text="Editing Skill Code", font=DEFAULTFONT).pack(padx=10)
         entry3 = tk.Entry(self.edit_window, width=40)
         entry3.insert(0, skill_code) 
         entry3.pack(pady=5)
 
         # Skill name entry
-        label3 = tk.Label(self.edit_window, text="Editing Skill Name").pack(padx=10)
+        label3 = tk.Label(self.edit_window, text="Editing Skill Name", font=DEFAULTFONT).pack(padx=10)
         entry4 = tk.Entry(self.edit_window, width=40)
         entry4.insert(0, skill_name)
         entry4.pack(pady=5)
 
         # End date entry
-        label4 = tk.Label(self.edit_window, text="Editing End Date (YYYY-MM-DD)").pack(padx=10)
+        label4 = tk.Label(self.edit_window, text="Editing End Date (YYYY-MM-DD)", font=DEFAULTFONT).pack(padx=10)
 
         label5 = tk.Label(self.edit_window, text="Leave it alone if you are not editing the date").pack(padx=10)
 
@@ -401,16 +430,31 @@ class Planner(tk.Frame):
             self.delete_msg(skill_id)
             self.edit_window.destroy()
 
+        def show_mark_message(skill_id):
+            check = messagebox.askokcancel("Confirm", f"Are you sure you want to mark: {skill_id} as finsihed")
+            if check == True:
+                mark_finish(skill_id)
+            self.edit_window.destroy()
+
+            # self.mark_finish(skill_id)
+            # self.edit_window.destroy()
+
         save_button = tk.Button(self.edit_window, text="Save", width=30, font=DEFAULTFONT,
                                 command=lambda: modify_task(skill_code, entry3.get(), entry4.get(), entry5.get(), show_save_message))
         save_button.pack(side="right", padx=10, pady=20)
 
-        delete_button = tk.Button(self.edit_window, text="Delete Task", width=20, bg="red", fg="white", font=DEFAULTFONT, 
-                                  command=lambda: show_delete_message(skill_code))
-        delete_button.pack(side="right", pady=20)
+        finish_button = tk.Button(self.edit_window, text="Mark as Finished", width=30, bg="light yellow", font=DEFAULTFONT, command = lambda: show_mark_message(skill_code)
+                                )
+        finish_button.pack(side="right", padx=10, pady=20)
+
+        
 
         cancel_button = tk.Button(self.edit_window, text="Cancel", width=30, font=DEFAULTFONT, command=self.edit_window.destroy)
         cancel_button.pack(side="left", padx=10, pady=20)
+
+        delete_button = tk.Button(self.edit_window, text="Delete Task", width=20, bg="red", fg="white", font=DEFAULTFONT, 
+                                  command=lambda: show_delete_message(skill_code))
+        delete_button.pack(side="left", pady=20)
 
     def on_edit_close(self):
         """Callback to reset edit_window attribute when window is closed."""
@@ -458,13 +502,12 @@ class Undated(tk.Frame):
         menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
         menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
         menu_frame.columnconfigure(0, weight=1)
-        menu_frame.rowconfigure((0, 1, 2), weight=1)
+        menu_frame.rowconfigure((0, 1, 2, 3), weight=1)
 
         to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
                                    font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
         to_main.grid(row=0, column=0, padx=10, pady=10)
 
-        # add initiate table function to this button
         to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, fg="white", bg="black",
                          font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
         to_planner.grid(row=1, column=0, padx=10, pady=10)
@@ -473,6 +516,11 @@ class Undated(tk.Frame):
                                 fg="white", bg="black",
                                font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
         to_undated.grid(row=2, column=0, padx=10, pady=10)
+
+        to_finish = tk.Button(menu_frame, text="Completed", width=20, height=5, 
+                                fg="white", bg="black",
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Finished))
+        to_finish.grid(row=3, column=0, padx=10, pady=10)
 
         # Function frame that contain all the function of the page
         function_frame = tk.LabelFrame(self, bg="#333e61", fg='white', bd=1)
@@ -624,7 +672,7 @@ class Undated(tk.Frame):
                 new_duration = (end_date_obj - start_date_obj).days
 
             
-                cursor.execute("UPDATE roadmap SET duration = ? WHERE skill_code = ?", (new_duration, skill_code))
+                cursor.execute("UPDATE roadmap SET duration = ?, end_date = ? WHERE skill_code = ?", (new_duration, end_date_obj, skill_code))
     
         con.commit()
         con.close()
@@ -633,6 +681,97 @@ class Undated(tk.Frame):
         response = messagebox.showinfo("Success", "Dates saved successfully!")
         if response:
             bulk_entry_window.destroy()
+
+class Finished(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent)
+
+        # Configure page grid layout
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        # Menu frame that contain button to go to all pages
+        menu_frame = tk.LabelFrame(self, bg="#001046", fg='black', bd=1)
+        menu_frame.place(x=0, y=0, relwidth=0.15, relheight=1)
+        menu_frame.columnconfigure(0, weight=1)
+        menu_frame.rowconfigure((0, 1, 2, 3), weight=1)
+
+        to_main = tk.Button(menu_frame, text="Main", width=20, height=5, fg="white", bg="black", 
+                                   font=DEFAULTFONT, command=lambda: controller.show_frame(MainPage))
+        to_main.grid(row=0, column=0, padx=10, pady=10)
+
+        to_planner = tk.Button(menu_frame, text="Planner", width=20, height=5, fg="white", bg="black",
+                         font=DEFAULTFONT, command=lambda: controller.show_frame(Planner))
+        to_planner.grid(row=1, column=0, padx=10, pady=10)
+
+        to_undated = tk.Button(menu_frame, text="Undated", width=20, height=5, 
+                                fg="white", bg="black",
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Undated))
+        to_undated.grid(row=2, column=0, padx=10, pady=10)
+
+        to_finish = tk.Button(menu_frame, text="Completed", width=20, height=5, 
+                                fg="white", bg="black",
+                               font=DEFAULTFONT, command=lambda: controller.show_frame(Finished))
+        to_finish.grid(row=3, column=0, padx=10, pady=10)
+
+        # Function frame that contain all the function of the page
+        function_frame = tk.LabelFrame(self, bg="#6fa7b0", fg='white', bd=1)
+        function_frame.place(relx=0.15, y=0, relwidth=0.85, relheight=1)
+        function_frame.columnconfigure(0, weight=1)
+        function_frame.rowconfigure((0, 1, 2, 3), weight=1)
+        
+        # Label of the page
+        label = tk.Label(function_frame, text="Finished", font=BIGFONT, bg ="#6fa7b0", fg="white")
+        label.grid(row=0, column=0, pady=10, padx=10)
+
+        table = ttk.Treeview(function_frame, columns=("comp_id", "comp_name", "skill_code", "skill_name"), show="headings")
+        table.column("comp_id", width=10)
+        table.column("comp_name", width=100)
+        table.column("skill_code", width=10)
+        table.column("skill_name", width=50)
+
+        table.heading('comp_id', text="Competency Code")
+        table.heading('comp_name', text="Competency Name")
+        table.heading('skill_code', text="Skill Code")
+        table.heading('skill_name', text="Skill Name")
+        table.grid(row=1, column=0, sticky="nsew", padx=20)
+
+
+        # scroll bar
+        scroll = tk.Scrollbar(function_frame, orient='vertical', command=table.yview, bg='red')
+        table.configure(yscrollcommand=scroll.set)
+        scroll.grid(row=1, column=0, sticky="nse")
+ 
+
+        reset_table = tk.Button(function_frame, text="Reload Table", width=20, height=2,
+                             font=DEFAULTFONT,
+                             command=lambda: self.init_planner(table))
+        reset_table.grid(row=3, column=0, sticky="w", padx=20, pady=40)
+
+
+
+    # Link with reset table to initiate/reset the table
+    def init_planner(self, table):
+        # Connect to the SQLite database and fetch data
+        con = sqlite3.connect('task.db')
+        cursor = con.cursor()
+
+        
+        # Query the data from roadmap table
+        cursor.execute("""
+        SELECT competency_code, competency_name, skill_code, skill_name
+        FROM task""")
+        rows = cursor.fetchall()
+        
+        # Clear the current data in the table
+        for item in table.get_children():
+            table.delete(item)
+        
+        # Insert each row of data into the table
+        for row in rows:
+            table.insert('', 'end', values=row)
+        
+        con.close()
 
 # Run the application
 if __name__ == "__main__":
