@@ -25,7 +25,7 @@ def add_task(competency_code, competency_name, skill_code, skill_name, end_date)
 
         # Insert the new task with the start date and duration
         cursor.execute(
-            "INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name, duration) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name, duration, end_date) VALUES (?, ?, ?, ?, ?, ?)",
             (competency_code, competency_name, skill_code, skill_name, duration, end_date_obj)
         )
         con.commit()
