@@ -25,8 +25,8 @@ def add_task(competency_code, competency_name, skill_code, skill_name, end_date)
 
         # Insert the new task with the start date and duration
         cursor.execute(
-            "INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name, duration) VALUES (?, ?, ?, ?, ?)",
-            (competency_code, competency_name, skill_code, skill_name, duration)
+            "INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name, duration) VALUES (?, ?, ?, ?, ?, ?)",
+            (competency_code, competency_name, skill_code, skill_name, duration, end_date_obj)
         )
         con.commit()
         con.close()
@@ -82,7 +82,9 @@ def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callba
     if new_end_date:
         new_duration = (new_end_date - new_start_date).days
         updates.append("duration = ?")
+        updates.append("end_date = ?")
         params.append(new_duration)
+        params.append(new_end_date)
         
     if updates:
         params.append(skill_code)
@@ -130,6 +132,49 @@ def delete_task(skill_code):
         print(f"An error occurred: {e}")
     finally:
         roadmap_con.close()
+
+def mark_finish(skill_code):
+    con_roadmap = sqlite3.connect('roadmap.db')
+    cursor_roadmap = con_roadmap.cursor()
+    
+    # Connect to the task database
+    con_task = sqlite3.connect('task.db')
+    cursor_task = con_task.cursor()
+
+    con_task.execute('''
+    CREATE TABLE IF NOT EXISTS task (
+        competency_code TEXT,
+        competency_name TEXT,
+        skill_code TEXT,
+        skill_name TEXT,
+        duration TEXT,
+        end_date TEST
+    )
+    ''')
+    
+    # Retrieve the row to delete from roadmap
+    cursor_roadmap.execute("SELECT * FROM roadmap WHERE skill_code = ?", (skill_code,))
+    row = cursor_roadmap.fetchone()
+    
+    if row:
+        # Insert the row into task database
+        cursor_task.execute("""
+            INSERT INTO task (competency_code, competency_name, skill_code, skill_name, duration, end_date)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, row)
+        
+        # Delete the row from roadmap
+        cursor_roadmap.execute("DELETE FROM roadmap WHERE skill_code = ?", (skill_code,))
+        
+        # Commit both transactions
+        con_roadmap.commit()
+        con_task.commit()
+    
+    # Close connections
+    con_roadmap.close()
+    con_task.close()
+
+        
     
 
 
