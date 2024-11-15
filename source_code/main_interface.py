@@ -68,7 +68,7 @@ class MainApp(tk.Tk):
     
     def on_closing(self):
         if messagebox.askyesno(title="Quit?", message="Do you want to quit"):
-            print("Saving files")
+            # print("Saving files")
             self.destroy()
             
 
@@ -146,11 +146,11 @@ class MainPage(tk.Frame):
     # output: filepath
     def open_file(self):
         filepath = filedialog.askopenfilename()
-        print(filepath)
+        # print(filepath)
         check = init_database(filepath)
-        print(check)
+        # print(check)
         if not check:
-            print("Roadmap file already exist")
+            # print("Roadmap file already exist")
             messagebox.showinfo("Failed", "Roadmap file already exist")
         else:
             messagebox.showinfo("Success", "Go to planner to look/edit roadmap")
@@ -264,7 +264,7 @@ class Planner(tk.Frame):
         cursor.execute("""
         SELECT competency_code, competency_name, skill_code, skill_name, duration
         FROM roadmap
-        ORDER BY duration IS NULL, duration ASC
+        ORDER BY duration IS NULL, CAST(duration AS INTEGER) ASC
         """)
         rows = cursor.fetchall()
         
@@ -273,8 +273,13 @@ class Planner(tk.Frame):
             table.delete(item)
         
         # Insert each row of data into the table
+        # for row in rows:
+        #     table.insert('', 'end', values=row)
+
         for row in rows:
-            table.insert('', 'end', values=row)
+        # Append "days" to the duration if it is not None
+            formatted_row = row[:-1] + (f"{row[-1]} days" if row[-1] is not None else "",)
+            table.insert('', 'end', values=formatted_row)
         
         con.close()
 
@@ -370,7 +375,7 @@ class Planner(tk.Frame):
             row_values = table.item(selected_item, "values")
             com_code, com_name, skill_code, skill_name, duration = row_values
      
-        print(com_code, com_name, skill_code, skill_name, duration)
+        # print(com_code, com_name, skill_code, skill_name, duration)
         self.open_edit_page(com_code, com_name, skill_code, skill_name)  
 
     # To-do
@@ -423,11 +428,12 @@ class Planner(tk.Frame):
             self.edit_window.destroy()
 
         def show_delete_message(skill_id):
-            # check = messagebox.askokcancel("Confirm Delete", f"Are you sure you want to delete task: {skill_id}")
-            # if check == True:
-            #     delete_task(skill_id)
+            check = messagebox.askokcancel("Confirm Delete", f"Are you sure you want to delete task: {skill_id}")
+            if check == True:
+                message = delete_task(skill_id)
+                messagebox.showinfo("Message",message)
 
-            self.delete_msg(skill_id)
+            # self.delete_msg(skill_id)
             self.edit_window.destroy()
 
         def show_mark_message(skill_id):
@@ -472,19 +478,19 @@ class Planner(tk.Frame):
         ok_button = ttk.Button(popup, text="Okay", command=popup.destroy)
         ok_button.pack(pady=10)
 
-    def delete_msg(self, skill_code):
-        popup = tk.Toplevel(self)
-        popup.wm_title("Message")
-        popup.after(1, lambda: popup.focus_force())
+    # def delete_msg(self, skill_code):
+    #     popup = tk.Toplevel(self)
+    #     popup.wm_title("Message")
+    #     popup.after(1, lambda: popup.focus_force())
 
-        label = tk.Label(popup, text="Are you sure you want to delete this task?", font=DEFAULTFONT)
-        label.pack(pady=10)
+    #     label = tk.Label(popup, text="Are you sure you want to delete this task?", font=DEFAULTFONT)
+    #     label.pack(pady=10)
 
-        no_button = ttk.Button(popup, text="Cancel", command=popup.destroy)
-        no_button.pack(pady=10, padx=10, side="left")
+    #     no_button = ttk.Button(popup, text="Cancel", command=popup.destroy)
+    #     no_button.pack(pady=10, padx=10, side="left")
 
-        yes_button = ttk.Button(popup, text="Confirm", command=lambda: [delete_task(skill_code), popup.destroy()])
-        yes_button.pack(pady=10,padx=10, side="right")
+    #     yes_button = ttk.Button(popup, text="Confirm", command=lambda: [delete_task(skill_code), popup.destroy()])
+    #     yes_button.pack(pady=10,padx=10, side="right")
 
 
     
