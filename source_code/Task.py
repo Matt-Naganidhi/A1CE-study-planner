@@ -17,7 +17,7 @@ def add_task(competency_code, competency_name, skill_code, skill_name, end_date)
         end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
         start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
         duration = (end_date_obj - start_date_obj).days
-        print(duration)
+        # print(duration)
 
         # Connect to the database
         con = sqlite3.connect('roadmap.db')
@@ -47,7 +47,7 @@ def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callba
     task = roadmap_cursor.fetchone()
     if not task:
         error_msg = f"Task with skill code {skill_code} not found."
-        print(error_msg)
+        # print(error_msg)
         if msg_callback:
             msg_callback(error_msg)
         roadmap_con.close()
@@ -61,7 +61,7 @@ def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callba
             new_end_date = datetime.strptime(end_date, date_format)
         except ValueError:
             error_msg = "Invalid date format. Please use YYYY-MM-DD."
-            print(error_msg)
+            # print(error_msg)
             if msg_callback:
                 msg_callback(error_msg)
             roadmap_con.close()
@@ -89,24 +89,24 @@ def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callba
     if updates:
         params.append(skill_code)
         query = f"UPDATE roadmap SET {', '.join(updates)} WHERE skill_code = ?"
-        print(f"Executing query: {query}")
-        print(f"With parameters: {params}")
+        # print(f"Executing query: {query}")
+        # print(f"With parameters: {params}")
 
         try:
             roadmap_cursor.execute(query, params)
             roadmap_con.commit()
             success_msg = f"Task with skill code {skill_code} has been successfully modified."
-            print(success_msg)
+            # print(success_msg)
             if msg_callback:
                 msg_callback(success_msg)
         except sqlite3.Error as e:
             error_msg = f"An error occurred: {e}"
-            print(error_msg)
+            # print(error_msg)
             if msg_callback:
                 msg_callback(error_msg)
     else:
         no_update_msg = "No updates to apply."
-        print(no_update_msg)
+        # print(no_update_msg)
         if msg_callback:
             msg_callback(no_update_msg)
 
@@ -123,15 +123,20 @@ def delete_task(skill_code):
         
         # Check if the row was deleted
         if roadmap_cursor.rowcount == 0:
-            print(f"No task with skill code {skill_code} found.")
+            roadmap_con.commit()
+            roadmap_con.close()
+            return f"No task with skill code {skill_code} found."
         else:
-            print(f"Task with skill code {skill_code} has been successfully deleted.")
+            roadmap_con.commit()
+            roadmap_con.close()
+            return f"Task with skill code {skill_code} has been successfully deleted."
             
-        roadmap_con.commit()
+        
     except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
-    finally:
+        roadmap_con.commit()
         roadmap_con.close()
+        return f"An error occurred: {e}"
+        
 
 def mark_finish(skill_code):
     con_roadmap = sqlite3.connect('roadmap.db')
