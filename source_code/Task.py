@@ -10,6 +10,18 @@ from datetime import datetime
 
 def add_task(competency_code, competency_name, skill_code, skill_name, end_date):
     try:
+        # Connect to the database
+        con = sqlite3.connect('roadmap.db')
+        cursor = con.cursor()
+
+        # Check if the skill_code is unique
+        cursor.execute("SELECT COUNT(*) FROM roadmap WHERE skill_code = ?", (skill_code,))
+        count = cursor.fetchone()[0]
+        
+        if count > 0:
+            con.close()
+            return f"Error: The skill code '{skill_code}' already exists. Please use a unique skill code."
+
         # Set start date to today
         start_date = datetime.now().strftime("%Y-%m-%d")
         
@@ -17,16 +29,11 @@ def add_task(competency_code, competency_name, skill_code, skill_name, end_date)
         end_date_obj = datetime.strptime(end_date, "%Y-%m-%d")
         start_date_obj = datetime.strptime(start_date, "%Y-%m-%d")
         duration = (end_date_obj - start_date_obj).days
-        # print(duration)
-
-        # Connect to the database
-        con = sqlite3.connect('roadmap.db')
-        cursor = con.cursor()
 
         # Insert the new task with the start date and duration
         cursor.execute(
             "INSERT INTO roadmap (competency_code, competency_name, skill_code, skill_name, duration, end_date) VALUES (?, ?, ?, ?, ?, ?)",
-            (competency_code, competency_name, skill_code, skill_name, duration, end_date_obj)
+            (competency_code, competency_name, skill_code, skill_name, duration, end_date)
         )
         con.commit()
         con.close()
@@ -38,7 +45,7 @@ def add_task(competency_code, competency_name, skill_code, skill_name, end_date)
 
         
 
-def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callback=None):
+def modify_task(skill_code, new_skill_name, end_date, msg_callback=None):
     # Connect to the database
     roadmap_con = sqlite3.connect('roadmap.db')
     roadmap_cursor = roadmap_con.cursor()
@@ -74,9 +81,9 @@ def modify_task(skill_code, new_skill_code, new_skill_name, end_date, msg_callba
         updates.append("skill_name = ?")
         params.append(new_skill_name)
 
-    if new_skill_code:
-        updates.append("skill_code = ?")
-        params.append(new_skill_code)
+    # if new_skill_code:
+    #     updates.append("skill_code = ?")
+    #     params.append(new_skill_code)
 
     # Calculate new duration
     if new_end_date:
@@ -178,12 +185,3 @@ def mark_finish(skill_code):
     # Close connections
     con_roadmap.close()
     con_task.close()
-
-        
-    
-
-
-    
-    
-    
-    
