@@ -10,7 +10,7 @@ import pandas as pd
 # Create/connect to the database
 def init_database(inputfile):
 
-    if not inputfile.lower().endswith('.csv'):
+    if not inputfile.lower().endswith('.csv') and "":
         print("Error: The input file is not a CSV file.")
         return -1
 
