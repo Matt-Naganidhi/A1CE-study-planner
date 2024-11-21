@@ -68,7 +68,7 @@ class MainApp(tk.Tk):
     
     def on_closing(self):
         if messagebox.askyesno(title="Quit?", message="Do you want to quit"):
-            # print("Saving files")
+            
             self.destroy()
             
 
@@ -149,11 +149,14 @@ class MainPage(tk.Frame):
         # print(filepath)
         check = init_database(filepath)
         # print(check)
-        if not check:
+        if check == 0:
             # print("Roadmap file already exist")
             messagebox.showinfo("Failed", "Roadmap file already exist")
-        else:
+        elif check == 1:
             messagebox.showinfo("Success", "Go to planner to look/edit roadmap")
+        elif check == -1:
+            messagebox.showinfo("Failed", "Imported file is not a .csv file")
+
 
     
     
@@ -353,7 +356,8 @@ class Planner(tk.Frame):
         elif selected_competency:
             competency_code, competency_name = selected_competency.split(": ")
         else:
-            self.msg("Please select or enter a competency code and name.")
+            messagebox.showinfo("Message", "Please select or enter a competency code and name.")
+     
             return
 
         # Call add_task function from task_manager.py
@@ -363,7 +367,7 @@ class Planner(tk.Frame):
         popup.destroy()
         # self.init_planner(self.table)  # Refresh the table with updated data
         messagebox.showinfo("Message", message)
-        # self.msg(message)  # Display message to user
+       
 
     
     # Edit page on double click
@@ -402,9 +406,8 @@ class Planner(tk.Frame):
 
         # Skill code entry
         label2 = tk.Label(self.edit_window, text="Editing Skill Code", font=DEFAULTFONT).pack(padx=10)
-        entry3 = tk.Entry(self.edit_window, width=40)
-        entry3.insert(0, skill_code) 
-        entry3.pack(pady=5)
+        labelskillcode = tk.Label(self.edit_window, text=f"{skill_code}").pack(padx=10)
+       
 
         # Skill name entry
         label3 = tk.Label(self.edit_window, text="Editing Skill Name", font=DEFAULTFONT).pack(padx=10)
@@ -442,11 +445,10 @@ class Planner(tk.Frame):
                 mark_finish(skill_id)
             self.edit_window.destroy()
 
-            # self.mark_finish(skill_id)
-            # self.edit_window.destroy()
+    
 
         save_button = tk.Button(self.edit_window, text="Save", width=30, font=DEFAULTFONT,
-                                command=lambda: modify_task(skill_code, entry3.get(), entry4.get(), entry5.get(), show_save_message))
+                                command=lambda: modify_task(skill_code, entry4.get(), entry5.get(), show_save_message))
         save_button.pack(side="right", padx=10, pady=20)
 
         finish_button = tk.Button(self.edit_window, text="Mark as Finished", width=30, bg="light yellow", font=DEFAULTFONT, command = lambda: show_mark_message(skill_code)
@@ -478,19 +480,6 @@ class Planner(tk.Frame):
         ok_button = ttk.Button(popup, text="Okay", command=popup.destroy)
         ok_button.pack(pady=10)
 
-    # def delete_msg(self, skill_code):
-    #     popup = tk.Toplevel(self)
-    #     popup.wm_title("Message")
-    #     popup.after(1, lambda: popup.focus_force())
-
-    #     label = tk.Label(popup, text="Are you sure you want to delete this task?", font=DEFAULTFONT)
-    #     label.pack(pady=10)
-
-    #     no_button = ttk.Button(popup, text="Cancel", command=popup.destroy)
-    #     no_button.pack(pady=10, padx=10, side="left")
-
-    #     yes_button = ttk.Button(popup, text="Confirm", command=lambda: [delete_task(skill_code), popup.destroy()])
-    #     yes_button.pack(pady=10,padx=10, side="right")
 
 
     
