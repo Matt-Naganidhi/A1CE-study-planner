@@ -9,6 +9,11 @@ import pandas as pd
 
 # Create/connect to the database
 def init_database(inputfile):
+
+    if not inputfile.lower().endswith('.csv'):
+        print("Error: The input file is not a CSV file.")
+        return -1
+
     con = sqlite3.connect('roadmap.db')
     # Create a cursor to execute commands on the database
     cursor = con.cursor()
@@ -24,7 +29,7 @@ def init_database(inputfile):
         row_count = cursor.fetchone()[0]
         
         if row_count > 0:
-            print("Roadmap already imported")
+            # print("Roadmap already imported or invalid file")
             con.close()
             return 0
     
@@ -32,6 +37,7 @@ def init_database(inputfile):
 
     # Read the CSV file into a DataFrame with specified encoding
     df = pd.read_csv(inputfile)  # Change encoding as necessary
+    
 
     # Strip whitespace from column names
     df.columns = df.columns.str.strip()
@@ -62,7 +68,7 @@ def init_database(inputfile):
             VALUES (?, ?, ?, ?)
             ''', (row['competency_code'], row['competency_name'], row['skill_code'], row['skill_name']))
         except KeyError as e:
-            print(f"KeyError: {e} - Check if the column names in the CSV match the expected names.")
+            print(f"KeyError: {e} - check column content in .csv file")
 
     cursor.execute('''UPDATE roadmap 
                    SET competency_code = RTRIM(competency_code)''')
