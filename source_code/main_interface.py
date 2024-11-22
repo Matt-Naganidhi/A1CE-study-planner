@@ -156,6 +156,8 @@ class MainPage(tk.Frame):
             messagebox.showinfo("Success", "Go to planner to look/edit roadmap")
         elif check == -1:
             messagebox.showinfo("Failed", "Imported file is not a .csv file")
+        elif check == -2:
+            messagebox.showinfo("Failed", "Invalid Format: Failed to read csv")
 
 
     

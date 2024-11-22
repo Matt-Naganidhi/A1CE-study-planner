@@ -10,10 +10,10 @@ import pandas as pd
 # Create/connect to the database
 def init_database(inputfile):
 
-    if not inputfile.lower().endswith('.csv') and "":
+    if not inputfile.lower().endswith('.csv'):
         print("Error: The input file is not a CSV file.")
         return -1
-
+    
     con = sqlite3.connect('roadmap.db')
     # Create a cursor to execute commands on the database
     cursor = con.cursor()
@@ -34,15 +34,17 @@ def init_database(inputfile):
             return 0
     
     
+    try:
+        # Read the CSV file into a DataFrame with specified encoding
+        df = pd.read_csv(inputfile)  # Change encoding as necessary
+        
 
-    # Read the CSV file into a DataFrame with specified encoding
-    df = pd.read_csv(inputfile)  # Change encoding as necessary
-    
-
-    # Strip whitespace from column names
-    df.columns = df.columns.str.strip()
-    
-    df.columns = ['competency_code', 'competency_name', 'skill_code', 'skill_name']  # Example of renaming
+        # Strip whitespace from column names
+        df.columns = df.columns.str.strip()
+        
+        df.columns = ['competency_code', 'competency_name', 'skill_code', 'skill_name']  # Example of renaming
+    except Exception as e:
+        return -2
 
     
     # Debug print to check the DataFrame columns
