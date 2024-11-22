@@ -9,12 +9,12 @@ import pandas as pd
 
 # Create/connect to the database
 def init_database(inputfile):
-
-    if not inputfile.lower().endswith('.csv'):
-        print("Error: The input file is not a CSV file.")
-        return -1
-    if "":
+    try:
+        if not inputfile.lower().endswith('.csv'):
+            print("Error: The input file is not a CSV file.")
+            return -1
         print("Error: no input")
+    except Exception as e:
         return -3
     
     con = sqlite3.connect('roadmap.db')
