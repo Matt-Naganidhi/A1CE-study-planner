@@ -11,9 +11,9 @@ Last updated: 2024-11-20
 Software Release date: 2024-11-15
 
 -- Installation instructions
-To use the software, download an executable file from Google Drive.
-Make sure to download the correct version for your operating system.
-It is preferable to put the executable in a folder since it will generated
+1. To use the software, download an executable file from Google Drive.
+2. Make sure to download the correct version for your operating system.
+3. It is preferable to put the executable in a folder since it will generated
 2 database files.
 
 -- Getting started (e.g. how to run the application)
