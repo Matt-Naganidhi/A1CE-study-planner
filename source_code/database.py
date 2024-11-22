@@ -13,6 +13,9 @@ def init_database(inputfile):
     if not inputfile.lower().endswith('.csv'):
         print("Error: The input file is not a CSV file.")
         return -1
+    if "":
+        print("Error: no input")
+        return -3
     
     con = sqlite3.connect('roadmap.db')
     # Create a cursor to execute commands on the database
